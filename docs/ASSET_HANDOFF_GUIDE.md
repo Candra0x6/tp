@@ -40,22 +40,21 @@ Row 3 (y: 96-127px) : [ Idle Right ]  [ Walk Right 1 ]  [ Walk Right 2 ]  [ Acti
 
 ---
 
-## 3. Unified Dungeon Floor Tileset Architecture (7 Biomes)
+## 3. Unified Dungeon Floor Tileset Architecture (6 Biomes)
 
 > [!NOTE]
 > **Pillars & Obstacles Removed**: The central pillars have been deleted to allow an open, unobstructed dungeon floor for smooth character navigation and voting.
 
-The dungeon environment is a unified tilemap floor transitioning through 7 floor biomes across 20 levels:
+The dungeon environment is a unified tilemap floor transitioning through 6 floor biomes across 6 levels (1 biome per floor):
 
-| Floor Range | Biome / Theme Name | Tile Palette Colors | Magic Seal Glow | Ambient Particles |
+| Floor | Biome / Theme Name | Tile Palette Colors | Magic Seal Glow | Ambient Particles |
 | :--- | :--- | :--- | :--- | :--- |
-| **Floors 1 - 3** | **ANCIENT CRYPT** | `#1e293b` / `#152032` (Dark Slate) | Indigo (`#6366f1`) | Fire Embers & Smoke |
-| **Floors 4 - 6** | **MAGMA CAVERN** | `#2d1212` / `#1a0a0a` (Volcanic Red) | Flame Orange (`#f97316`) | Lava Sparks & Ash |
-| **Floors 7 - 9** | **CYBER VAULT** | `#032840` / `#011929` (Neon Navy) | Cyber Cyan (`#06b6d4`) | Data Bits & Cyan Dust |
-| **Floors 10 - 12** | **FROST TEMPLE** | `#1e3a5f` / `#132640` (Glacial Ice) | Frost Blue (`#38bdf8`) | Snowflakes & Ice Mists |
-| **Floors 13 - 15** | **EMERALD RUINS** | `#143823` / `#0b2415` (Jungle Moss) | Emerald Green (`#10b981`) | Spores & Glowing Pollen |
-| **Floors 16 - 18** | **GOLDEN SANCTUM** | `#3a2d0c` / `#241b06` (Gilded Gold) | Sun Yellow (`#facc15`) | Gold Dust & Rays |
-| **Floors 19 - 20** | **VOID THRONE** | `#280e3b` / `#180726` (Void Purple) | Radiant Purple (`#c084fc`) | Void Orbs & Cosmic Dust |
+| **Floor 1** | **ANCIENT CRYPT** | `#1e293b` / `#152032` (Dark Slate) | Indigo (`#6366f1`) | Fire Embers & Smoke |
+| **Floor 2** | **MAGMA CAVERN** | `#2d1212` / `#1a0a0a` (Volcanic Red) | Flame Orange (`#f97316`) | Lava Sparks & Ash |
+| **Floor 3** | **FROST TEMPLE** | `#1e3a5f` / `#132640` (Glacial Ice) | Frost Blue (`#38bdf8`) | Snowflakes & Ice Mists |
+| **Floor 4** | **EMERALD RUINS** | `#143823` / `#0b2415` (Jungle Moss) | Emerald Green (`#10b981`) | Spores & Glowing Pollen |
+| **Floor 5** | **GOLDEN SANCTUM** | `#3a2d0c` / `#241b06` (Gilded Gold) | Sun Yellow (`#facc15`) | Gold Dust & Rays |
+| **Floor 6** | **VOID THRONE** | `#280e3b` / `#180726` (Void Purple) | Radiant Purple (`#c084fc`) | Void Orbs & Cosmic Dust |
 
 ### Dungeon Grid Specifications
 - **Unified Floor Tilemap Area**: `320 x 160 px` (16 columns x 8 rows of `20 x 20 px` floor tiles).
@@ -130,6 +129,6 @@ function create() {
 - [ ] `lyra_mage_32x32.png` (Mage Spritesheet)
 - [ ] `shadow_rogue_32x32.png` (Rogue Spritesheet)
 - [ ] `aura_cleric_32x32.png` (Cleric Spritesheet)
-- [ ] `dungeon_unified_tileset_20x20.png` (7 biome floor tilesets: Crypt, Magma, Cyber, Frost, Emerald, Golden, Void)
+- [ ] `dungeon_unified_tileset_20x20.png` (6 biome floor tilesets: Crypt, Magma, Frost, Emerald, Golden, Void)
 - [ ] `doors_44x48.png` (West, North, East sanctuary doors with states)
 - [ ] `torches_16x32.png` (4-frame flame animation sheet)
