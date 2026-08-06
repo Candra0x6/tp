@@ -241,6 +241,7 @@ export class TrustFallGame implements GameInstance {
 
   // Custom Spritesheet Assets
   private valorSprite: HTMLImageElement | null = null;
+  private lyraSprite: HTMLImageElement | null = null;
 
   public init(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
@@ -249,6 +250,8 @@ export class TrustFallGame implements GameInstance {
     if (typeof window !== 'undefined') {
       this.valorSprite = new Image();
       this.valorSprite.src = '/assets/sprites/valor_warrior_spritesheet.png';
+      this.lyraSprite = new Image();
+      this.lyraSprite.src = '/assets/sprites/lyra_mage_spritesheet.png';
     }
     if (typeof document !== 'undefined' && document.fonts) {
       document.fonts.load("8px 'Press Start 2P'").catch(() => {});
@@ -1110,7 +1113,27 @@ export class TrustFallGame implements GameInstance {
       ctx.fillRect(x - 4, legY, 3, isWalk ? 5 : 4);
       ctx.fillRect(x + 1, legY, 3, isWalk ? 4 : 5);
     } else if (role === 'Mage') {
-      // Purple Robes & Pointy Wizard Hat
+      if (this.lyraSprite && this.lyraSprite.complete && this.lyraSprite.naturalWidth > 0) {
+        const frameW = this.lyraSprite.naturalWidth / 4;
+        const frameH = this.lyraSprite.naturalHeight / 4;
+        const dirRowMap: Record<string, number> = { down: 0, up: 1, left: 2, right: 3 };
+        const row = dirRowMap[dir] ?? 0;
+        const col = animFrame % 4;
+
+        const sx = col * frameW;
+        const sy = row * frameH;
+
+        // Render Lyra sprite centered over target position
+        ctx.drawImage(
+          this.lyraSprite,
+          sx, sy, frameW, frameH,
+          x - 14, y - 10, 28, 28
+        );
+        ctx.restore();
+        return;
+      }
+
+      // Purple Robes & Pointy Wizard Hat (Procedural Fallback)
       ctx.fillStyle = primaryColor;
       ctx.fillRect(x - 5, bodyY, 10, 9); // Robe
       ctx.fillStyle = '#6b21a8';
