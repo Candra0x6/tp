@@ -43,8 +43,8 @@ export function useFitScale(
       const sw = available.width - padding
       const sh = available.height - padding
 
-      const fitted = LADDER.find((n) => bw * n <= sw && bh * n <= sh)
-      setScale(fitted ?? Math.min(sw / bw, sh / bh))
+      const scaleFactor = Math.min(sw / bw, sh / bh) * 0.85
+      setScale(Math.max(0.4, scaleFactor))
     }
 
     measure()

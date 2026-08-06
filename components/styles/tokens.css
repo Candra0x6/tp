@@ -142,9 +142,9 @@
 }
 
 :root {
-  /* The logical screen. Never responsive. Only the scale factor changes. */
-  --screen-w: 480px;
-  --screen-h: 320px;
+  /* The logical screen. Expands to fill the bezel. */
+  --screen-w: 500px;
+  --screen-h: 330px;
   --safe: 12px; /* nothing touches the bezel */
 
   /* The bezel. Load bearing: a black screen inside a black shell would

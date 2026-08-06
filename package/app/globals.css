@@ -1,0 +1,71 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Silkscreen:wght@400;700&family=VT323&display=swap');
+
+@layer utilities {
+  .font-pixel {
+    font-family: 'Press Start 2P', monospace;
+  }
+  .font-silkscreen {
+    font-family: 'Silkscreen', cursive;
+  }
+  .font-vt323 {
+    font-family: 'VT323', monospace;
+  }
+  
+  .pixelated {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    -ms-interpolation-mode: nearest-neighbor;
+  }
+  
+  .pixel-shadow {
+    box-shadow: 4px 4px 0px #000000;
+  }
+  .pixel-shadow-sm {
+    box-shadow: 2px 2px 0px #000000;
+  }
+  .pixel-shadow-inset {
+    box-shadow: inset 3px 3px 0px rgba(255, 255, 255, 0.2), inset -3px -3px 0px rgba(0, 0, 0, 0.4);
+  }
+  
+  .pixel-btn-shadow {
+    box-shadow: 0px 4px 0px #1a1a1a, 0px 6px 0px #000000;
+  }
+  
+  .pixel-btn-pressed {
+    transform: translateY(3px);
+    box-shadow: 0px 1px 0px #1a1a1a, 0px 2px 0px #000000;
+  }
+  
+  .scanlines {
+    background: linear-gradient(
+      rgba(18, 16, 16, 0) 50%, 
+      rgba(0, 0, 0, 0.25) 50%
+    );
+    background-size: 100% 4px;
+  }
+
+  .lcd-grid {
+    background-size: 4px 4px;
+    background-image: 
+      linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+  }
+}
+
+/* Custom scrollbar for pixel look */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #111;
+}
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border: 1px solid #555;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+

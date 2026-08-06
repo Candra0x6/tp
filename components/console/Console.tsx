@@ -3,7 +3,9 @@ import { ActionButtons, DPad, Speaker, StartSelect } from './Controls'
 import { VolumeSlider } from './VolumeSlider'
 import { useFitScale } from './useFitScale'
 import { ConsoleInputProvider } from './useConsoleInput'
+import './console.css'
 import type { ReactNode, RefObject } from 'react'
+
 
 /**
  * The console.
@@ -59,7 +61,7 @@ function MonadMark() {
  */
 function useOverflowWarning(viewport: RefObject<HTMLDivElement | null>) {
   useEffect(() => {
-    if (!import.meta.env.DEV) return
+    if (process.env.NODE_ENV === 'production') return
     const el = viewport.current
     if (!el) return
 

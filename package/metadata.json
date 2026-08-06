@@ -1,0 +1,6 @@
+{
+  "name": "Pixel Retro Handheld",
+  "description": "A vertical pixel-art handheld game console interface with a dynamic modular viewport supporting multiple interactive pixel games, maps, and audio effects.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
