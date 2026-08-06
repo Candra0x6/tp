@@ -239,10 +239,17 @@ export class TrustFallGame implements GameInstance {
   private prevInputB = false;
   private prevSelect = false;
 
+  // Custom Spritesheet Assets
+  private valorSprite: HTMLImageElement | null = null;
+
   public init(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
     this.width = canvas.width;
     this.height = canvas.height;
+    if (typeof window !== 'undefined') {
+      this.valorSprite = new Image();
+      this.valorSprite.src = '/assets/sprites/valor_warrior_spritesheet.png';
+    }
     if (typeof document !== 'undefined' && document.fonts) {
       document.fonts.load("8px 'Press Start 2P'").catch(() => {});
       document.fonts.load("8px 'Silkscreen'").catch(() => {});
@@ -1066,7 +1073,27 @@ export class TrustFallGame implements GameInstance {
 
     // Shadow/Base offset
     if (role === 'Warrior') {
-      // Blue Steel Armor & Visor Helmet
+      if (this.valorSprite && this.valorSprite.complete && this.valorSprite.naturalWidth > 0) {
+        const frameW = this.valorSprite.naturalWidth / 4;
+        const frameH = this.valorSprite.naturalHeight / 4;
+        const dirRowMap: Record<string, number> = { down: 0, up: 1, left: 2, right: 3 };
+        const row = dirRowMap[dir] ?? 0;
+        const col = animFrame % 4;
+
+        const sx = col * frameW;
+        const sy = row * frameH;
+
+        // Render Valor sprite centered over target position
+        ctx.drawImage(
+          this.valorSprite,
+          sx, sy, frameW, frameH,
+          x - 14, y - 10, 28, 28
+        );
+        ctx.restore();
+        return;
+      }
+
+      // Blue Steel Armor & Visor Helmet (Procedural Fallback)
       ctx.fillStyle = primaryColor;
       ctx.fillRect(x - 5, bodyY, 10, 7); // Armor
       ctx.fillStyle = '#94a3b8';
