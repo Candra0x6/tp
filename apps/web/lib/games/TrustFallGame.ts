@@ -242,6 +242,7 @@ export class TrustFallGame implements GameInstance {
   // Custom Spritesheet Assets
   private valorSprite: HTMLImageElement | null = null;
   private lyraSprite: HTMLImageElement | null = null;
+  private shadowSprite: HTMLImageElement | null = null;
 
   public init(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
@@ -252,6 +253,8 @@ export class TrustFallGame implements GameInstance {
       this.valorSprite.src = '/assets/sprites/valor_warrior_spritesheet.png';
       this.lyraSprite = new Image();
       this.lyraSprite.src = '/assets/sprites/lyra_mage_spritesheet.png';
+      this.shadowSprite = new Image();
+      this.shadowSprite.src = '/assets/sprites/shadow_rogue_spritesheet.png';
     }
     if (typeof document !== 'undefined' && document.fonts) {
       document.fonts.load("8px 'Press Start 2P'").catch(() => {});
@@ -1147,7 +1150,27 @@ export class TrustFallGame implements GameInstance {
       ctx.arc(x + (dir === 'left' ? -7 : 7), bodyY + orbOffset, 3, 0, Math.PI * 2);
       ctx.fill();
     } else if (role === 'Rogue') {
-      // Emerald Cloak & Hood with Dual Daggers
+      if (this.shadowSprite && this.shadowSprite.complete && this.shadowSprite.naturalWidth > 0) {
+        const frameW = this.shadowSprite.naturalWidth / 4;
+        const frameH = this.shadowSprite.naturalHeight / 4;
+        const dirRowMap: Record<string, number> = { down: 0, up: 1, left: 2, right: 3 };
+        const row = dirRowMap[dir] ?? 0;
+        const col = animFrame % 4;
+
+        const sx = col * frameW;
+        const sy = row * frameH;
+
+        // Render Shadow sprite centered over target position
+        ctx.drawImage(
+          this.shadowSprite,
+          sx, sy, frameW, frameH,
+          x - 14, y - 10, 28, 28
+        );
+        ctx.restore();
+        return;
+      }
+
+      // Emerald Cloak & Hood with Dual Daggers (Procedural Fallback)
       ctx.fillStyle = primaryColor;
       ctx.fillRect(x - 4, headY, 8, 6); // Hood
       ctx.fillStyle = '#14532d';
