@@ -1,0 +1,245 @@
+{
+  "communities": {
+    "0": [
+      "components_console_console",
+      "components_console_console_console",
+      "components_console_console_monadmark",
+      "components_console_console_useneedsrotate",
+      "components_console_console_useoverflowwarning",
+      "components_console_controls",
+      "components_console_controls_actionbuttons",
+      "components_console_controls_dpad",
+      "components_console_controls_speaker",
+      "components_console_controls_startselect",
+      "components_console_controls_usehold",
+      "components_console_input_store_createinputstore",
+      "components_console_useconsoleinput",
+      "components_console_useconsoleinput_consoleinputprovider",
+      "components_console_useconsoleinput_inputcontext",
+      "components_console_useconsoleinput_useconsolecontrols",
+      "components_console_useconsoleinput_useconsoleintent",
+      "components_console_useconsoleinput_useconsolepressed",
+      "components_console_useconsoleinput_usestore",
+      "components_console_usefitscale",
+      "components_console_usefitscale_ladder",
+      "components_console_usefitscale_usefitscale"
+    ],
+    "1": [
+      "components_console_input_store",
+      "components_console_input_store_empty",
+      "components_console_input_store_inputstore",
+      "components_console_input_store_intenthandler",
+      "components_console_intents",
+      "components_console_intents_consoleintent",
+      "components_console_intents_gamepad_buttons",
+      "components_console_intents_intentfromkey",
+      "components_console_intents_intents",
+      "components_console_intents_intentsfromaxes",
+      "components_console_intents_key_map",
+      "components_console_intents_repeatable",
+      "components_console_intents_shouldpreventdefault"
+    ],
+    "2": [
+      "components_design_palette",
+      "components_design_palette_contrast_floor",
+      "components_design_palette_contrastcontract",
+      "components_design_palette_critical_text_floor",
+      "components_design_palette_criticaltext",
+      "components_design_palette_cssvar",
+      "components_design_palette_decorative",
+      "components_design_palette_lantern",
+      "components_design_palette_lanterncolor",
+      "components_design_palette_shell",
+      "components_design_palette_shellcolor",
+      "components_design_palette_shellcontrastcontract",
+      "components_design_palette_shellcssvar"
+    ],
+    "3": [
+      "components_config_brand",
+      "components_config_brand_brand",
+      "components_config_brand_cpu_label",
+      "components_config_brand_depthid",
+      "components_config_brand_depths",
+      "components_config_brand_doorsforfloor",
+      "components_config_brand_multipliers",
+      "components_config_brand_seats",
+      "components_config_brand_votesneeded"
+    ],
+    "4": [
+      "components_ui_data",
+      "components_ui_data_bin_class",
+      "components_ui_data_binstate",
+      "components_ui_data_binstrip",
+      "components_ui_data_chart",
+      "components_ui_data_meter",
+      "components_ui_data_pin",
+      "components_ui_data_pinkind"
+    ],
+    "5": [
+      "components_ui_index",
+      "components_ui_motion",
+      "components_ui_motion_framename",
+      "components_ui_motion_frames",
+      "components_ui_motion_marquee",
+      "components_ui_motion_sprite",
+      "components_ui_motion_spriteanimation"
+    ],
+    "6": [
+      "components_ui_text",
+      "components_ui_text_role",
+      "components_ui_text_stat",
+      "components_ui_text_textrole",
+      "components_ui_text_texttone",
+      "components_ui_text_tone",
+      "components_ui_text_value"
+    ],
+    "7": [
+      "components_ui_select",
+      "components_ui_select_list",
+      "components_ui_select_row",
+      "components_ui_select_tabs",
+      "components_ui_select_toggle",
+      "components_ui_text_pixeltext"
+    ],
+    "8": [
+      "components_ui_surface",
+      "components_ui_surface_dialog",
+      "components_ui_surface_field",
+      "components_ui_surface_panel",
+      "components_ui_surface_scanlines",
+      "components_ui_surface_sunk"
+    ]
+  },
+  "cohesion": {
+    "0": 0.19480519480519481,
+    "1": 0.2564102564102564,
+    "2": 0.15384615384615385,
+    "3": 0.2222222222222222,
+    "4": 0.25,
+    "5": 0.5238095238095238,
+    "6": 0.2857142857142857,
+    "7": 0.3333333333333333,
+    "8": 0.3333333333333333
+  },
+  "gods": [
+    {
+      "id": "components_console_useconsoleinput_useconsolepressed",
+      "label": "useConsolePressed()",
+      "degree": 6
+    },
+    {
+      "id": "components_ui_text_pixeltext",
+      "label": "PixelText()",
+      "degree": 6
+    },
+    {
+      "id": "components_console_controls_usehold",
+      "label": "useHold()",
+      "degree": 5
+    },
+    {
+      "id": "components_console_intents_consoleintent",
+      "label": "ConsoleIntent",
+      "degree": 5
+    },
+    {
+      "id": "components_console_console_console",
+      "label": "Console()",
+      "degree": 4
+    },
+    {
+      "id": "components_console_controls_dpad",
+      "label": "DPad()",
+      "degree": 4
+    },
+    {
+      "id": "components_console_controls_actionbuttons",
+      "label": "ActionButtons()",
+      "degree": 4
+    },
+    {
+      "id": "components_console_controls_startselect",
+      "label": "StartSelect()",
+      "degree": 4
+    },
+    {
+      "id": "components_console_useconsoleinput_usestore",
+      "label": "useStore()",
+      "degree": 4
+    },
+    {
+      "id": "components_console_useconsoleinput_useconsolecontrols",
+      "label": "useConsoleControls()",
+      "degree": 4
+    }
+  ],
+  "surprises": [
+    {
+      "source": "Console()",
+      "target": "useFitScale()",
+      "source_files": [
+        "components/console/Console.tsx",
+        "components/console/useFitScale.ts"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "cross-file semantic connection"
+    },
+    {
+      "source": "useHold()",
+      "target": "useConsoleControls()",
+      "source_files": [
+        "components/console/Controls.tsx",
+        "components/console/useConsoleInput.tsx"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "cross-file semantic connection"
+    },
+    {
+      "source": "DPad()",
+      "target": "useConsolePressed()",
+      "source_files": [
+        "components/console/Controls.tsx",
+        "components/console/useConsoleInput.tsx"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "cross-file semantic connection"
+    },
+    {
+      "source": "ActionButtons()",
+      "target": "useConsolePressed()",
+      "source_files": [
+        "components/console/Controls.tsx",
+        "components/console/useConsoleInput.tsx"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "cross-file semantic connection"
+    },
+    {
+      "source": "StartSelect()",
+      "target": "useConsolePressed()",
+      "source_files": [
+        "components/console/Controls.tsx",
+        "components/console/useConsoleInput.tsx"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "cross-file semantic connection"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `ConsoleIntent` connect `input-store.ts` to `Console.tsx`?",
+      "why": "High betweenness centrality (0.002) - this node is a cross-community bridge."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `brand`, `depths`, `DepthId` to the rest of the system?",
+      "why": "26 weakly-connected nodes found - possible documentation gaps or missing edges."
+    }
+  ]
+}
