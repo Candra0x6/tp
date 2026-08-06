@@ -245,6 +245,8 @@ export class TrustFallGame implements GameInstance {
   private shadowSprite: HTMLImageElement | null = null;
   private auraSprite: HTMLImageElement | null = null;
   private biomeSprites: (HTMLImageElement | null)[] = [null, null, null, null, null, null];
+  private doorsSprite: HTMLImageElement | null = null;
+  private torchesSprite: HTMLImageElement | null = null;
 
   public init(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
@@ -259,6 +261,11 @@ export class TrustFallGame implements GameInstance {
       this.shadowSprite.src = '/assets/sprites/shadow_rogue_spritesheet.png';
       this.auraSprite = new Image();
       this.auraSprite.src = '/assets/sprites/aura_cleric_spritesheet.png';
+
+      this.doorsSprite = new Image();
+      this.doorsSprite.src = '/assets/props/doors_44x48.png';
+      this.torchesSprite = new Image();
+      this.torchesSprite.src = '/assets/props/torches_16x32.png';
 
       const biomes = [
         '/assets/biomes/biome_1_ancient_crypt.png',
@@ -1000,7 +1007,13 @@ export class TrustFallGame implements GameInstance {
     ctx.arc(x + 2, y - 2, 18, 0, Math.PI * 2);
     ctx.fill();
 
-    // Wooden bracket
+    if (this.torchesSprite && this.torchesSprite.complete && this.torchesSprite.naturalWidth > 0) {
+      const f = Math.floor(this.animCounter / 4) % 4;
+      ctx.drawImage(this.torchesSprite, f * 16, 0, 16, 32, x - 6, y - 10, 16, 32);
+      return;
+    }
+
+    // Wooden bracket (Procedural Fallback)
     ctx.fillStyle = this.theme.torchBracket;
     ctx.fillRect(x, y, 4, 10);
 
@@ -1033,7 +1046,28 @@ export class TrustFallGame implements GameInstance {
     isSelected: boolean,
     isNear: boolean
   ) {
-    // Stone arch outline
+    if (this.doorsSprite && this.doorsSprite.complete && this.doorsSprite.naturalWidth > 0) {
+      const frameIdx = isSelected ? 1 : 0;
+      ctx.drawImage(this.doorsSprite, frameIdx * 44, 0, 44, 48, x, y, width, height);
+
+      // Gemstone elemental rune above door
+      ctx.fillStyle = this.theme.runeColors[doorNum - 1] || this.theme.accentColor;
+      ctx.beginPath();
+      ctx.arc(x + width / 2, y + 4, 3, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Door Number Plate
+      ctx.fillStyle = '#020617';
+      ctx.fillRect(x + width / 2 - 10, y + 10, 20, 14);
+      ctx.strokeStyle = this.theme.accentColor;
+      ctx.lineWidth = 1;
+      ctx.strokeRect(x + width / 2 - 10, y + 10, 20, 14);
+
+      this.drawPixelText(ctx, `D${doorNum}`, x + width / 2, y + 14, { align: 'center', color: '#ffffff' });
+      return;
+    }
+
+    // Stone arch outline (Procedural Fallback)
     ctx.fillStyle = this.theme.wallColor;
     ctx.fillRect(x, y, width, height);
 
