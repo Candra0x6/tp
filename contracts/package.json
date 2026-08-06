@@ -1,0 +1,10 @@
+{
+  "name": "@trust-fall/contracts",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "if command -v cargo-build-sbf >/dev/null 2>&1; then anchor build; else cargo check --manifest-path programs/trust-fall/Cargo.toml; fi",
+    "test": "cargo test --manifest-path programs/trust-fall/Cargo.toml",
+    "lint": "cargo clippy --manifest-path programs/trust-fall/Cargo.toml || true"
+  }
+}

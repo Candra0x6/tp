@@ -1,0 +1,19 @@
+[package]
+name = "trust-fall"
+version = "0.1.0"
+description = "Trust Fall Anchor Program"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+name = "trust_fall"
+
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+default = []
+
+[dependencies]
+anchor-lang = "0.30.1"

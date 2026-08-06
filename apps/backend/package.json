@@ -1,0 +1,20 @@
+{
+  "name": "@trust-fall/backend",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "scripts": {
+    "dev": "tsc --watch & node dist/index.js",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@trust-fall/chain-client": "workspace:*",
+    "@trust-fall/types": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.9.3"
+  }
+}

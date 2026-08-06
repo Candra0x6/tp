@@ -33,47 +33,31 @@ a Sunday outage.
 
 ```
 trust-fall/
-├── program/                       Anchor workspace, Lane A
-│   ├── programs/trust-fall/src/
-│   │   ├── lib.rs                 #[ephemeral] then #[program]
-│   │   ├── state.rs               Run, ClueSlot, Vault
-│   │   ├── clue.rs                the algorithm. pure, no Anchor types.
-│   │   ├── economy.rs             multipliers, clamping, split
-│   │   ├── errors.rs
-│   │   └── instructions/
-│   │       ├── lobby.rs           create, join, ready, stake
-│   │       ├── delegate.rs        delegate + permissions
-│   │       ├── deal.rs            vrf request + callback
-│   │       ├── floor.rs           vote, mark, chat, resolve, resolve_expired
-│   │       └── settle.rs          bank, fall, commit_and_undelegate, payout
-│   └── tests/
-│       ├── clue.rs                the three properties, 10k seeds
-│       └── e2e.ts                 full run against a local validator
+├── apps/                          Application targets
+│   ├── web/                       Frontend Web App (Next.js / Vite SPA)
+│   │   ├── app/                   Screens, pages, routing
+│   │   ├── components/            Web-specific UI components
+│   │   └── hooks/                 Custom hooks & game loop
+│   └── backend/                   Backend Service / Indexer / Bot Engine
+│       ├── src/api/               API routes & handlers
+│       ├── src/services/          CPU bot runners & chain event indexing
+│       └── src/routes/            REST / WebSocket endpoints
 │
-├── app/                           Vite SPA, Lanes B and C
-│   └── src/
-│       ├── chain/                 Lane B owns
-│       │   ├── connection.ts      base, router, and ER fqdn resolution
-│       │   ├── program.ts         Anchor client, typed instruction wrappers
-│       │   ├── subscribe.ts       onAccountChange plumbing to the store
-│       │   ├── session.ts         session key issue, scope, revoke
-│       │   └── tee.ts             attestation check, auth token, gated reads
-│       ├── game/
-│       │   ├── store.ts           Zustand. the only place chain state lands.
-│       │   ├── bots.ts            CPU players, Lane B
-│       │   ├── clue.ts            mask -> sentence + tiles. render only.
-│       │   └── screens/           S0 to S8, Lane C
-│       ├── console/               shell, D-pad, fit scale     ported
-│       ├── ui/                    text, surface, select, data ported
-│       ├── design/palette.ts      mirror of tokens.css        ported
-│       ├── styles/tokens.css      LANTERN                     ported, reskinned
-│       ├── config/brand.ts        every product name
-│       └── routes/
+├── contracts/                     Anchor Smart Contracts Workspace
+│   ├── programs/trust-fall/src/   Rust program instructions & state
+│   ├── tests/                     E2E validator tests
+│   └── Anchor.toml                Anchor network & build config
 │
-├── components/                    the ported primitives as delivered.
-│                                  reference copy. app/src is what builds.
-├── docs/
-└── .claude/skills/                magicblock, solana-dev, craft skills
+├── packages/                      Shared Workspace Libraries
+│   ├── chain-client/              RPC subscriber, Anchor client wrappers
+│   ├── types/                     Shared TypeScript interface definitions & DTOs
+│   ├── ui/                        LANTERN tokens, Console Shell, UI primitives
+│   └── config/                    Shared tsconfig base & linter rules
+│
+├── docs/                          System specs, PRDs, and architecture
+├── pnpm-workspace.yaml            pnpm monorepo workspace definition
+├── turbo.json                     Turborepo pipeline config
+└── package.json                   Root monorepo scripts
 ```
 
 ## 3. Boundaries

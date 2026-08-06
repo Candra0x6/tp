@@ -1,0 +1,161 @@
+/*
+  LANTERN
+  The design system for TRUST FALL. Spec lives in docs/DESIGN-SYSTEM.md.
+
+  This file is the single source of truth for every visual value. The mirror in
+  design/palette.ts exists so contrast can be asserted in a test, and
+  palette.test.ts fails if the two ever drift.
+
+  Three rules govern everything below:
+    1. Every length is a multiple of 4px, except 1px and 2px hairlines.
+    2. Every colour pair that carries meaning has a MEASURED contrast ratio.
+       The numbers in the comments were computed from these hex values, not
+       estimated. Recompute if you change one.
+    3. The shell and the screen are two separate palettes. Nothing crosses.
+*/
+
+@theme {
+  /* ---------------------------------------------------------------------
+     SPACING
+     Tailwind's base unit is 4px, so p-1 is 4px and it is not possible to
+     write an off-grid spacing utility by accident.
+     --------------------------------------------------------------------- */
+  --spacing: 4px;
+
+  /* =====================================================================
+     THE SHELL
+     Black plastic. The only place MagicBlock identity appears.
+     ===================================================================== */
+  --color-shell-body: #000000; /* the console body. true black. */
+  --color-shell-raised: #141419; /* button caps, D-pad, raised plate */
+  --color-shell-sunk: #0a0a0d; /* button wells, the screen recess */
+  --color-shell-edge: #4a4a58; /*  2.41:1 on body. the moulding line. */
+  --color-shell-ink: #ffffff; /* 21.00:1. the MagicBlock mark, A/B/SELECT. */
+  --color-shell-ink-dim: #84848f; /*  5.68:1. key legend under each button. */
+
+  /* =====================================================================
+     THE SCREEN: LANTERN
+     A warm dark field with an ember light in it.
+     ===================================================================== */
+
+  /* ---------------------------------------------------------------------
+     SURFACES
+     --------------------------------------------------------------------- */
+  --color-screen: #0f0e13; /* the field. everything sits on this. */
+  --color-panel: #1a1922; /* raised panels, rows, the chat log */
+  --color-sunk: #08070b; /* wells, empty meter track, door recess */
+
+  /* ---------------------------------------------------------------------
+     INK
+     Warm white, never #ffffff. Pure white on near black vibrates at 8px,
+     and the shell already owns pure white. Two whites is one too many.
+     --------------------------------------------------------------------- */
+  --color-ink: #f2efe6; /* 16.72:1 on screen, 15.14:1 on panel. body. */
+  --color-ink-dim: #8b8698; /*  5.46:1 on screen,  4.94:1 on panel. labels. */
+  --color-ink-invert: #0f0e13; /* text on bright fills */
+
+  /* ---------------------------------------------------------------------
+     EDGES
+     On a dark field the border is often the ONLY boundary of a panel,
+     because panel measures 1.10:1 against screen. So edge is load bearing
+     here and must clear 3:1, unlike the light system this was ported from
+     where a hard black border did the job for free.
+     --------------------------------------------------------------------- */
+  --color-edge: #6b6580; /* 3.48:1 on screen, 3.15:1 on panel. */
+
+  /* ---------------------------------------------------------------------
+     MEANING
+     Accent and gain are MagicBlock's own ember and green. They are here
+     because they are good signal colours on a dark field, and they carry
+     GAME meaning, never sponsor meaning.
+     --------------------------------------------------------------------- */
+  --color-accent: #ff5219; /* 5.92:1 on screen. selection, THE LANTERN. */
+  --color-accent-ink: #0f0e13; /* 5.92:1 on accent. never white on ember. */
+
+  --color-gain: #00ff94; /* 14.40:1. payout, cleared floor, safe door. */
+  --color-loss: #ff3b4e; /*  5.48:1. THE FALL, the wrong door. */
+  --color-warn: #ffb020; /* 10.51:1. timer under 10 seconds. */
+
+  /* Deliberately below AA at 2.13:1. A cold door is one somebody ruled
+     out, and the LOSS of contrast is the message. Never carries text. */
+  --color-cold: #4a4757;
+
+  /* ---------------------------------------------------------------------
+     TYPE
+     Two sizes doing all the work, doubled. Never 12px, never 20px, never
+     24px: a bitmap font at a non-integer multiple resamples and the
+     illusion dies in a way people feel without being able to name it.
+     --------------------------------------------------------------------- */
+  --font-pixel: 'Departure Mono', ui-monospace, 'Roboto Mono', monospace;
+  --font-chrome: 'Roboto Mono', ui-monospace, monospace;
+
+  --text-micro: 8px; /* labels, units, footnotes */
+  --text-micro--line-height: 12px;
+  --text-body: 8px; /* chat, descriptions */
+  --text-body--line-height: 16px;
+  --text-value: 16px; /* numbers that matter */
+  --text-value--line-height: 20px;
+  --text-title: 16px; /* screen headers, uppercase */
+  --text-title--line-height: 24px;
+  --text-hero: 32px; /* boot, results, the multiplier */
+  --text-hero--line-height: 40px;
+
+  /* ---------------------------------------------------------------------
+     MOTION
+     Stepped for anything on the pixel grid. Real curves are permitted
+     only for full screen effects, which are not on the grid.
+     --------------------------------------------------------------------- */
+  --ease-sprite-2: steps(2, end);
+  --ease-sprite-4: steps(4, end);
+  --ease-sprite-8: steps(8, end);
+  --ease-out-screen: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out-screen: cubic-bezier(0.77, 0, 0.175, 1);
+
+  /* No --ease-in. It delays the first movement, which is the exact moment
+     the player is watching, and it reads as lag. */
+
+  /* ---------------------------------------------------------------------
+     DEPTH
+     One shadow. Hard offset, no blur. Sticker, not glass.
+     --------------------------------------------------------------------- */
+  --shadow-hard: 2px 2px 0 0 var(--color-sunk);
+  --shadow-sunk: inset 1px 1px 0 0 var(--color-sunk);
+}
+
+/*
+  The screen font. Self-hosted, SIL OFL, 22KB woff2.
+
+  font-display: block because a pixel font that swaps mid-render breaks the
+  illusion worse than a blank frame does.
+
+  Confirmed glyphs:  † ◄ ► ▲ █ ░ ▓ → ★
+  ABSENT, never use: ☠ ◀ ▶ ✓
+*/
+@font-face {
+  font-family: 'Departure Mono';
+  src:
+    url('/fonts/DepartureMono-Regular.woff2') format('woff2'),
+    url('/fonts/DepartureMono-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+
+:root {
+  /* The logical screen. Expands to fill the bezel. */
+  --screen-w: 500px;
+  --screen-h: 330px;
+  --safe: 12px; /* nothing touches the bezel */
+
+  /* The bezel. Load bearing: a black screen inside a black shell would
+     disappear, since screen measures only 1.09:1 against shell-body. This
+     ring is what makes the screen read as recessed glass. Do not remove it
+     to "clean up" the shell. */
+  --bezel-w: 4px;
+
+  /* Press feedback. 1px down and right, not a scale. Scaling a pixel panel
+     resamples its border and the crisp edge smears for the whole press. */
+  --press-x: 1px;
+  --press-y: 1px;
+  --press-ms: 80ms;
+}

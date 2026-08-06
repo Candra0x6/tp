@@ -4,10 +4,10 @@ import React, { useState, useCallback, useMemo } from 'react';
 import { ConsoleTheme, ScreenFilter, ScreenTint, ControllerInput, GameId, GameMetadata } from '../lib/types';
 import { GameViewport } from './GameViewport';
 import { sound } from '../lib/sound';
-import { Console } from '../../components/console/Console';
-import { useConsolePressed, useConsoleIntent } from '../../components/console/useConsoleInput';
-import { ConsoleIntent } from '../../components/console/intents';
-import '../../components/styles/tokens.css';
+import { Console } from '../../../packages/ui/src/console/Console';
+import { useConsolePressed, useConsoleIntent } from '../../../packages/ui/src/console/useConsoleInput';
+import { ConsoleIntent } from '../../../packages/ui/src/console/intents';
+import '../../../packages/ui/src/styles/tokens.css';
 import {
   Volume2,
   VolumeX,

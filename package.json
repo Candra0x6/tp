@@ -1,0 +1,23 @@
+{
+  "name": "trust-fall-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@11.4.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "contracts"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "dev:web": "pnpm --filter @trust-fall/web dev",
+    "dev:backend": "pnpm --filter @trust-fall/backend dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "clean": "turbo clean"
+  },
+  "devDependencies": {
+    "turbo": "^2.4.0",
+    "typescript": "^5.9.3"
+  }
+}

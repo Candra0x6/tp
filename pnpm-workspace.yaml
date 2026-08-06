@@ -1,0 +1,20 @@
+packages:
+  - 'apps/*'
+  - 'packages/*'
+  - 'contracts'
+
+allowBuilds:
+  '@google/genai': true
+  '@tailwindcss/oxide': true
+  protobufjs: true
+  re2: true
+  sharp: true
+  unrs-resolver: true
+
+onlyBuiltDependencies:
+  - '@google/genai'
+  - '@tailwindcss/oxide'
+  - 'protobufjs'
+  - 're2'
+  - 'sharp'
+  - 'unrs-resolver'
