@@ -40,7 +40,34 @@ Row 3 (y: 96-127px) : [ Idle Right ]  [ Walk Right 1 ]  [ Walk Right 2 ]  [ Acti
 
 ---
 
-## 3. Unified Dungeon Floor Tileset Architecture (6 Biomes)
+## 3. Web Pixel-Perfect Aspect Ratio & Scaling Specifications
+
+To guarantee 100% pixel-accurate rendering on the web without subpixel blur or distortion ("pecah"), follow these width ratio & viewport standards:
+
+### Native Screen & Buffer Resolution
+- **Native Resolution**: `320 x 240 px` (Internal Canvas Logical Buffer).
+- **Aspect Ratio**: `4:3` (Exact `1.333:1` Width-to-Height Aspect Ratio).
+- **Playfield Floor Tilemap Area**: `320 x 172 px` (16 columns × 8.6 rows of `20 x 20 px` tiles).
+
+### Pixel-Accurate Web Display Scaling Rules
+1. **Integer Scaling Factors**: Scale the `320 x 240 px` canvas by exact integer multiples in web containers:
+   - **1x (Native)**: `320 x 240 px`
+   - **2x (Retina / Desktop)**: `640 x 480 px`
+   - **3x (Full HD Console)**: `960 x 720 px`
+   - **4x (4K Ultra)**: `1280 x 960 px`
+2. **CSS Anti-Aliasing Lock**: Force Nearest-Neighbor texture filtering on web `<canvas>` instances:
+   ```css
+   canvas {
+     image-rendering: pixelated;
+     image-rendering: crisp-edges;
+     -ms-interpolation-mode: nearest-neighbor;
+   }
+   ```
+3. **HTML Canvas Buffer Attributes**: Always retain `<canvas width="320" height="240">` in DOM. Use CSS scale transforms (`scale(N)`) or `useFitScale` for responsive resizing to maintain strict 1:1 pixel grid alignment.
+
+---
+
+## 4. Unified Dungeon Floor Tileset Architecture (6 Biomes)
 
 > [!NOTE]
 > **Pillars & Obstacles Removed**: The central pillars have been deleted to allow an open, unobstructed dungeon floor for smooth character navigation and voting.
@@ -62,7 +89,7 @@ The dungeon environment is a unified tilemap floor transitioning through 6 floor
 
 ---
 
-## 4. Interactive Objects & Props
+## 5. Interactive Objects & Props
 
 - **3 Door Archways (`drawHdDoor`)**: `44 x 48 px` (Wood planks, stone arch, rune slot, number plate 1/2/3).
 - **Wall Torches (`drawHdTorch`)**: `16 x 32 px` (Wooden wall bracket with 4-frame animated flame cycle).
@@ -70,7 +97,7 @@ The dungeon environment is a unified tilemap floor transitioning through 6 floor
 
 ---
 
-## 5. Integration Guide (Canvas & Phaser 3)
+## 6. Integration Guide (Canvas & Phaser 3)
 
 ### Option A: Direct HTML5 Canvas Replacement (`TrustFallGame.ts`)
 
@@ -123,7 +150,7 @@ function create() {
 
 ---
 
-## 6. File Delivery Checklist for Artists
+## 7. File Delivery Checklist for Artists
 
 - [ ] `valor_warrior_32x32.png` (Warrior Spritesheet)
 - [ ] `lyra_mage_32x32.png` (Mage Spritesheet)
