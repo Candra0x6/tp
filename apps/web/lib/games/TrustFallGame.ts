@@ -930,14 +930,34 @@ export class TrustFallGame implements GameInstance {
     ctx.fillStyle = '#1e1b4b';
     ctx.fillRect(4, panelY + 3, 150, 36);
     ctx.strokeStyle = activeP.color;
+    ctx.lineWidth = 1;
     ctx.strokeRect(4, panelY + 3, 150, 36);
 
-    ctx.fillStyle = activeP.color;
-    ctx.fillRect(8, panelY + 6, 20, 20);
-    this.drawPixelText(ctx, activeP.name.substring(0, 5), 18, panelY + 28, { align: 'center', color: '#ffffff' });
+    // Hero Portrait Frame
+    ctx.fillStyle = '#0f172a';
+    ctx.fillRect(7, panelY + 5, 22, 22);
+    ctx.strokeStyle = activeP.color;
+    ctx.strokeRect(7, panelY + 5, 22, 22);
 
-    this.drawPixelText(ctx, `CLUE (${activeP.role}):`, 32, panelY + 6, { color: '#facc15' });
-    this.drawPixelText(ctx, activeP.clue, 32, panelY + 18, { color: '#e2e8f0' });
+    // Render Custom Pixel Art Hero Avatar
+    let heroImg: HTMLImageElement | null = null;
+    if (activeP.role === 'Warrior') heroImg = this.valorSprite;
+    else if (activeP.role === 'Mage') heroImg = this.lyraSprite;
+    else if (activeP.role === 'Rogue') heroImg = this.shadowSprite;
+    else if (activeP.role === 'Cleric') heroImg = this.auraSprite;
+
+    if (heroImg && heroImg.complete && heroImg.naturalWidth > 0) {
+      // Crop 32x32 front-facing avatar slice from spritesheet
+      ctx.drawImage(heroImg, 6, 2, 20, 20, 8, panelY + 6, 20, 20);
+    } else {
+      ctx.fillStyle = activeP.color;
+      ctx.fillRect(8, panelY + 6, 20, 20);
+    }
+
+    this.drawPixelText(ctx, activeP.name.substring(0, 5), 18, panelY + 29, { align: 'center', color: '#ffffff' });
+
+    this.drawPixelText(ctx, `CLUE (${activeP.role}):`, 33, panelY + 6, { color: '#facc15' });
+    this.drawPixelText(ctx, activeP.clue, 33, panelY + 18, { color: '#e2e8f0' });
 
     // Pixel Chat Feed Box
     ctx.fillStyle = '#020617';
