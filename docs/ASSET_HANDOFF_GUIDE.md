@@ -38,6 +38,9 @@ Row 2 (y: 64-95px)  : [ Idle Left ]   [ Walk Left 1 ]   [ Walk Left 2 ]   [ Acti
 Row 3 (y: 96-127px) : [ Idle Right ]  [ Walk Right 1 ]  [ Walk Right 2 ]  [ Action/Vote ]
 ```
 
+> [!TIP]
+> **No JSON Files Required**: If artists deliver uniform grid PNGs (`32x32 px` per frame, `128x128 px` total), neither HTML5 Canvas nor Phaser 3 requires JSON texture atlases. Grid coordinates are calculated programmatically: `sx = frameIndex * 32`, `sy = directionIndex * 32`.
+
 ---
 
 ## 3. Web Pixel-Perfect Aspect Ratio & Scaling Specifications
@@ -84,8 +87,13 @@ The dungeon environment is a unified tilemap floor transitioning through 6 floor
 | **Floor 6** | **VOID THRONE** | `#280e3b` / `#180726` (Void Purple) | Radiant Purple (`#c084fc`) | Void Orbs & Cosmic Dust |
 
 ### Dungeon Grid Specifications
-- **Unified Floor Tilemap Area**: `320 x 160 px` (16 columns x 8 rows of `20 x 20 px` floor tiles).
+- **Unified Floor Area**: `320 x 160 px` (16 columns x 8 rows of `20 x 20 px` floor tiles).
 - **Walls & Boundaries**: Top stone wall (`height: 26px`), Left/Right walls (`width: 12px`), Central Stairs (`50 x 18 px`).
+
+> [!IMPORTANT]
+> **Direct Full-Image Background Option (No JSON Tilemap Needed)**:
+> Artists can provide 6 individual full-resolution background PNG images (`320 x 240 px` per biome) instead of a Tiled JSON map.
+> On the HTML5 Canvas, drawing a single background image using `ctx.drawImage(biomeImage, 0, 0, 320, 240)` will place 100% pixel-perfectly with zero overhead and no JSON configuration required.
 
 ---
 
