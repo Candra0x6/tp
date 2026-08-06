@@ -239,11 +239,12 @@ export class TrustFallGame implements GameInstance {
   private prevInputB = false;
   private prevSelect = false;
 
-  // Custom Spritesheet Assets
+  // Custom Spritesheet & Biome Assets
   private valorSprite: HTMLImageElement | null = null;
   private lyraSprite: HTMLImageElement | null = null;
   private shadowSprite: HTMLImageElement | null = null;
   private auraSprite: HTMLImageElement | null = null;
+  private biomeSprites: (HTMLImageElement | null)[] = [null, null, null, null, null, null];
 
   public init(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
@@ -258,6 +259,20 @@ export class TrustFallGame implements GameInstance {
       this.shadowSprite.src = '/assets/sprites/shadow_rogue_spritesheet.png';
       this.auraSprite = new Image();
       this.auraSprite.src = '/assets/sprites/aura_cleric_spritesheet.png';
+
+      const biomes = [
+        '/assets/biomes/biome_1_ancient_crypt.png',
+        '/assets/biomes/biome_2_magma_cavern.png',
+        '/assets/biomes/biome_3_frost_temple.png',
+        '/assets/biomes/biome_4_emerald_ruins.png',
+        '/assets/biomes/biome_5_golden_sanctum.png',
+        '/assets/biomes/biome_6_void_throne.png',
+      ];
+      biomes.forEach((src, idx) => {
+        const img = new Image();
+        img.src = src;
+        this.biomeSprites[idx] = img;
+      });
     }
     if (typeof document !== 'undefined' && document.fonts) {
       document.fonts.load("8px 'Press Start 2P'").catch(() => {});
@@ -753,25 +768,31 @@ export class TrustFallGame implements GameInstance {
     // -------------------------------------------------------------------------
     // 64-BIT HD RENDER ENGINE: TOWER FLOOR & ENVIRONMENT
     // -------------------------------------------------------------------------
-    // Rich gradient floor background from theme
-    const bgGrad = ctx.createLinearGradient(0, 0, 0, this.height);
-    bgGrad.addColorStop(0, this.theme.bgGrad[0]);
-    bgGrad.addColorStop(0.5, this.theme.bgGrad[1]);
-    bgGrad.addColorStop(1, this.theme.bgGrad[2]);
-    ctx.fillStyle = bgGrad;
-    ctx.fillRect(0, 0, this.width, this.height);
+    const currentBiomeImg = this.biomeSprites[this.currentFloor - 1];
+    if (currentBiomeImg && currentBiomeImg.complete && currentBiomeImg.naturalWidth > 0) {
+      // Draw 100% pixel-perfect direct biome background image
+      ctx.drawImage(currentBiomeImg, 0, 0, this.width, this.height);
+    } else {
+      // Rich gradient floor background from theme (Procedural Fallback)
+      const bgGrad = ctx.createLinearGradient(0, 0, 0, this.height);
+      bgGrad.addColorStop(0, this.theme.bgGrad[0]);
+      bgGrad.addColorStop(0.5, this.theme.bgGrad[1]);
+      bgGrad.addColorStop(1, this.theme.bgGrad[2]);
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, this.width, this.height);
 
-    // High detail stone tile grid with subtle bevels
-    for (let r = 1; r < 9; r++) {
-      for (let c = 0; c < 16; c++) {
-        const tx = c * 20;
-        const ty = r * 20;
-        ctx.fillStyle = (c + r) % 2 === 0 ? this.theme.tileColor1 : this.theme.tileColor2;
-        ctx.fillRect(tx, ty, 20, 20);
+      // High detail stone tile grid with subtle bevels
+      for (let r = 1; r < 9; r++) {
+        for (let c = 0; c < 16; c++) {
+          const tx = c * 20;
+          const ty = r * 20;
+          ctx.fillStyle = (c + r) % 2 === 0 ? this.theme.tileColor1 : this.theme.tileColor2;
+          ctx.fillRect(tx, ty, 20, 20);
 
-        ctx.strokeStyle = this.theme.tileBevel;
-        ctx.lineWidth = 0.5;
-        ctx.strokeRect(tx, ty, 20, 20);
+          ctx.strokeStyle = this.theme.tileBevel;
+          ctx.lineWidth = 0.5;
+          ctx.strokeRect(tx, ty, 20, 20);
+        }
       }
     }
 
