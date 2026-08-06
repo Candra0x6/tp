@@ -1,0 +1,104 @@
+# --- graphify: code structure only ---
+# Markdown and docs
+*.md
+*.mdx
+*.markdown
+*.rst
+*.txt
+*.adoc
+docs/
+*.pdf
+*.doc
+*.docx
+*.ppt
+*.pptx
+*.xls
+*.xlsx
+*.csv
+
+# Images and design sources
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.avif
+*.bmp
+*.tiff
+*.svg
+*.ico
+*.psd
+*.ai
+*.sketch
+*.fig
+*.xd
+assets/
+public/
+static/
+
+# Media
+*.mp4
+*.mov
+*.webm
+*.avi
+*.mkv
+*.mp3
+*.wav
+*.ogg
+*.flac
+
+# Fonts
+*.ttf
+*.otf
+*.woff
+*.woff2
+*.eot
+
+# Dependencies, build output, caches
+node_modules/
+.pnpm-store/
+dist/
+build/
+out/
+.next/
+.nuxt/
+.output/
+.turbo/
+.vercel/
+.netlify/
+coverage/
+target/
+vendor/
+__pycache__/
+.venv/
+venv/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+# Lockfiles and generated artifacts
+*.lock
+*-lock.json
+*.lockb
+*.min.js
+*.min.css
+*.map
+*.snap
+
+# VCS, tooling, secrets, graph output itself
+.git/
+.idea/
+.vscode/
+.claude/
+.DS_Store
+.env
+.env.*
+graphify-out/
+
+# --- trust-fall specific ---
+# Anchor build output and generated IDL types
+program/target/
+program/.anchor/
+**/*.so
+# Generated route tree, rebuilt by the router CLI
+app/src/routeTree.gen.ts

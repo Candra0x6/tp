@@ -1,0 +1,40 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# build output
+dist/
+build/
+.vercel/
+coverage/
+
+# anchor / rust
+program/target/
+program/.anchor/
+**/*.so
+
+# SECRETS. Never commit a keypair.
+*.json.key
+**/id.json
+**/*-keypair.json
+program/target/deploy/*-keypair.json
+.env
+.env.*
+!.env.example
+
+# machine specific claude config. Skills ARE tracked, settings are not:
+# settings.json pins hook commands to absolute paths on one machine, so a
+# teammate who clones inherits hooks pointing at a binary they do not have.
+.claude/settings.json
+.claude/settings.local.json
+
+# editors / os
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
