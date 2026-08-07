@@ -1160,7 +1160,7 @@ export class TrustFallGame implements GameInstance {
       if (this.valorSprite && this.valorSprite.complete && this.valorSprite.naturalWidth > 0) {
         const frameW = this.valorSprite.naturalWidth / 4;
         const frameH = this.valorSprite.naturalHeight / 4;
-        const dirRowMap: Record<string, number> = { down: 0, up: 1, left: 2, right: 3 };
+        const dirRowMap: Record<string, number> = { down: 0, up: 1, right: 2, left: 3 };
         const row = dirRowMap[dir] ?? 0;
         const col = animFrame % 4;
 
@@ -1197,7 +1197,7 @@ export class TrustFallGame implements GameInstance {
       if (this.lyraSprite && this.lyraSprite.complete && this.lyraSprite.naturalWidth > 0) {
         const frameW = this.lyraSprite.naturalWidth / 4;
         const frameH = this.lyraSprite.naturalHeight / 4;
-        const dirRowMap: Record<string, number> = { down: 0, up: 1, left: 2, right: 3 };
+        const dirRowMap: Record<string, number> = { down: 0, up: 1, right: 2, left: 3 };
         const row = dirRowMap[dir] ?? 0;
         const col = animFrame % 4;
 
@@ -1231,7 +1231,7 @@ export class TrustFallGame implements GameInstance {
       if (this.shadowSprite && this.shadowSprite.complete && this.shadowSprite.naturalWidth > 0) {
         const frameW = this.shadowSprite.naturalWidth / 4;
         const frameH = this.shadowSprite.naturalHeight / 4;
-        const dirRowMap: Record<string, number> = { down: 0, up: 1, left: 2, right: 3 };
+        const dirRowMap: Record<string, number> = { down: 0, up: 1, right: 2, left: 3 };
         const row = dirRowMap[dir] ?? 0;
         const col = animFrame % 4;
 
@@ -1267,7 +1267,7 @@ export class TrustFallGame implements GameInstance {
       if (this.auraSprite && this.auraSprite.complete && this.auraSprite.naturalWidth > 0) {
         const frameW = this.auraSprite.naturalWidth / 4;
         const frameH = this.auraSprite.naturalHeight / 4;
-        const dirRowMap: Record<string, number> = { down: 0, up: 1, left: 2, right: 3 };
+        const dirRowMap: Record<string, number> = { down: 0, up: 1, right: 2, left: 3 };
         const row = dirRowMap[dir] ?? 0;
         const col = animFrame % 4;
 
