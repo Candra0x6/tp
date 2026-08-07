@@ -112,11 +112,18 @@ the privacy problem is small enough to solve properly rather than approximate.
 6.1 is checkable rather than asserted. A judge can read this account and confirm
 that payouts came from falls and the seed, and from nowhere else.
 
+`total_falls` and `total_payouts` are **exact sums in base units**, not counts:
+every fall adds the fallen pot to `total_falls`, every payout beyond the pot adds
+the vault portion to `total_payouts`. So `balance == seeded + total_falls -
+total_payouts` always holds, and the ledger reconciles against the token account
+balances with no rounding drift.
+
 ### 2.4 `Escrow` — token account, base layer only
 
 A plain SPL token account owned by the run PDA. Holds `stake * player_count` for
-the duration. Never delegated, never touched from the ER. Released by a Magic
-Action at settlement.
+the duration. Never delegated, never touched from the ER. Released by the plain
+base-layer `settle` handler, which runs after `final_settle` returns the Run to
+base.
 
 ## 3. Seeds
 
@@ -175,7 +182,7 @@ checked against it before it is written.
 | floor | ER | votes, marks, chat |
 | resolve | ER | `revealed_door`, `cleared`, `phase`, commit |
 | bank or climb | ER | `phase`, next floor setup, next vrf request |
-| settle | ER then base | `commit_and_undelegate` plus a Magic Action moving Escrow and Vault |
+| settle | ER then base | `final_settle` does `commit_and_undelegate`, then the base `settle` handler moves Escrow and Vault using the player ATAs in `remaining_accounts` |
 
 Commits happen **once per floor**, not per action. A DEEP run is 5 commits plus
 one undelegate, inside the 10 commit sponsorship cap with room to spare.

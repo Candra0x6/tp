@@ -91,15 +91,15 @@ The only goal tonight is to remove tomorrow's unknowns.
 
 | # | Task | Lane | Status |
 | --- | --- | --- | --- |
-| 1.1 | `state.rs`: Run, ClueSlot, Vault, exact sizes from `ERD.md` | A | ⬜ |
-| 1.2 | `clue.rs`: the algorithm, pure, no Anchor types | A | ⬜ |
-| 1.3 | **`tests/clue.rs`: truth, exactness, necessity. 10k seeds, every N and P** | A | ⬜ |
-| 1.4 | `lobby.rs`: create, join, ready, stake into escrow | A | ⬜ |
-| 1.5 | `delegate.rs`: delegate Run and every ClueSlot | A | ⬜ |
-| 1.6 | `deal.rs`: VRF request plus `#[vrf_callback]` writing every mask | A | ⬜ |
-| 1.7 | `floor.rs`: vote, mark, chat with charset validation, resolve | A | ⬜ |
-| 1.8 | `floor.rs`: `resolve_expired` against `Clock::unix_timestamp` | A | ⬜ |
-| 1.9 | `economy.rs`: multipliers, vault clamp, equal split | A | ⬜ |
+| 1.1 | `state.rs`: Run, ClueSlot, Vault, exact sizes from `ERD.md` | A | ✅ |
+| 1.2 | `clue.rs`: the algorithm, pure, no Anchor types | A | ✅ |
+| 1.3 | **`clue.rs` in-module tests: truth, exactness, necessity. 10k seeds, every N and P** | A | ✅ |
+| 1.4 | `lobby.rs`: create, join, ready, stake into escrow | A | ✅ |
+| 1.5 | `delegate.rs`: delegate Run and every ClueSlot | A | ✅ |
+| 1.6 | `deal.rs`: VRF request plus `#[vrf_callback]` writing every mask | A | ✅ |
+| 1.7 | `floor.rs`: vote, mark, chat with charset validation, resolve | A | ✅ |
+| 1.8 | `floor.rs`: `resolve_expired` against `Clock::unix_timestamp` | A | ✅ |
+| 1.9 | `economy.rs`: multipliers, vault clamp, equal split | A | ✅ |
 | 1.10 | Anchor client wrappers in `chain/program.ts` | B | ⬜ |
 | 1.11 | `chain/connection.ts`: router `getDelegationStatus`, never a hardcoded fqdn | B | ⬜ |
 | 1.12 | `chain/subscribe.ts`: `onAccountChange` into the Zustand store | B | ⬜ |
@@ -107,6 +107,9 @@ The only goal tonight is to remove tomorrow's unknowns.
 
 > **GATE G1.** `cargo test` green, and `clue_necessary` in particular. That test
 > is the theme encoded: if it fails, a player has become optional.
+>
+> **G1 status: PASSED** 6 tests green (clue_truth, clue_exact, clue_necessary,
+> determinism, empty seats, test_id) on `cargo test`. Dated 2026-08-08.
 
 ### PHASE 2 · THE WIRE ⬜  (D2)
 
@@ -120,7 +123,7 @@ The only goal tonight is to remove tomorrow's unknowns.
 | 2.6 | `TheLine` chat, send and render, uppercase client-side | C | ⬜ |
 | 2.7 | S4 DEAL with real pending, timeout and retry | C | ⬜ |
 | 2.8 | S6 RESOLVE, S7 BANK OR CLIMB, S8 RESULTS | C | ⬜ |
-| 2.9 | Payout via Magic Action, reconciled not assumed | A | ⬜ |
+| 2.9 | Payout via base-layer `settle` after `commit_and_undelegate`, reconciled not assumed | A | 🔄 |
 
 > **GATE G2.** A full QUICK run, two humans, on devnet, that pays out. From here
 > the product exists and everything after is quality.
