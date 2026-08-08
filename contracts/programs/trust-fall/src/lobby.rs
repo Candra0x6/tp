@@ -184,23 +184,23 @@ pub struct CreateParty<'info> {
         seeds = [b"run", code.as_ref()],
         bump
     )]
-    pub run: Account<'info, Run>,
+    pub run: Box<Account<'info, Run>>,
     #[account(
         init,
         payer = host,
         token::mint = mint,
         token::authority = run,
-        seeds = [b"escrow", run.key().as_ref()],
+        seeds = [b"escrow", code.as_ref()],
         bump
     )]
-    pub escrow: Account<'info, TokenAccount>,
+    pub escrow: Box<Account<'info, TokenAccount>>,
     #[account(
         mut,
         constraint = host_ata.owner == host.key(),
         constraint = host_ata.mint == mint.key()
     )]
-    pub host_ata: Account<'info, TokenAccount>,
-    pub mint: Account<'info, Mint>,
+    pub host_ata: Box<Account<'info, TokenAccount>>,
+    pub mint: Box<Account<'info, Mint>>,
     pub token_program: Program<'info, Token>,
     pub system_program: Program<'info, System>,
 }
@@ -215,20 +215,20 @@ pub struct JoinParty<'info> {
         bump,
         constraint = run.phase == PHASE_LOBBY
     )]
-    pub run: Account<'info, Run>,
+    pub run: Box<Account<'info, Run>>,
     #[account(
         mut,
-        seeds = [b"escrow", run.key().as_ref()],
+        seeds = [b"escrow", run.code.as_ref()],
         bump
     )]
-    pub escrow: Account<'info, TokenAccount>,
+pub escrow: Box<Account<'info, TokenAccount>>,
     #[account(
         mut,
         constraint = player_ata.owner == player.key(),
         constraint = player_ata.mint == mint.key()
     )]
-    pub player_ata: Account<'info, TokenAccount>,
-    pub mint: Account<'info, Mint>,
+    pub player_ata: Box<Account<'info, TokenAccount>>,
+    pub mint: Box<Account<'info, Mint>>,
     pub token_program: Program<'info, Token>,
 }
 
@@ -241,5 +241,5 @@ pub struct Ready<'info> {
         bump,
         constraint = run.phase == PHASE_LOBBY
     )]
-    pub run: Account<'info, Run>,
+    pub run: Box<Account<'info, Run>>,
 }

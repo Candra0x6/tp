@@ -6,6 +6,7 @@ packages:
 allowBuilds:
   '@google/genai': true
   '@tailwindcss/oxide': true
+  bigint-buffer: true
   bufferutil: false
   protobufjs: true
   re2: true
@@ -16,6 +17,7 @@ allowBuilds:
 onlyBuiltDependencies:
   - '@google/genai'
   - '@tailwindcss/oxide'
+  - 'bigint-buffer'
   - 'protobufjs'
   - 're2'
   - 'sharp'

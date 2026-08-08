@@ -116,6 +116,7 @@ The only goal tonight is to remove tomorrow's unknowns.
 | # | Task | Lane | Status |
 | --- | --- | --- | --- |
 | 2.1 | Full run against `solana-test-validator` plus local ER, scripted | A | ⬜ |
+| 2.1a | Root-cause `create_party` access violation; local repro passes end-to-end | A | ✅ |
 | 2.2 | Session keys: one signature per run, no popup on vote or chat | B | ⬜ |
 | 2.3 | Two browsers in one party, votes visible in both under 100ms | B | ⬜ |
 | 2.4 | S5 FLOOR on real state: doors, marks, votes, timer | C | ⬜ |
@@ -127,6 +128,21 @@ The only goal tonight is to remove tomorrow's unknowns.
 
 > **GATE G2.** A full QUICK run, two humans, on devnet, that pays out. From here
 > the product exists and everything after is quality.
+>
+> **2.1a crash root-caused.** `create_party` / `join_party` crashed with
+> `Access violation in stack frame 5` reading 8 bytes at ~0x200005x20 inside
+> `try_accounts`, before any CPI, at ~2238 CU. Reproduced on the local
+> validator against a byte-for-byte identical deployed binary. Root cause:
+> the generated `try_accounts` frame exceeded the VM stack limit because a
+> 938-byte `Run` was held on the stack next to one or more `Account`-typed
+> token/vault accounts, and the escrow `init` had both `token::authority` and
+> seeds dereferencing `run.key()`. Fix, applied across every instruction
+> context: `Box` every `Run`, `TokenAccount`, `Mint`, `Vault`, `ClueSlot`
+> `Account` binding, and seed the escrow PDA from `code` instead of
+> `run.key()` (all three sites: `lobby.rs` Create/Join, `economy.rs` Settle).
+> Verified on local: create + join + ready all pass; escrow created, mint
+> matches, `escrow.owner == run`, stake 2_000_000 held per player. Dated
+> 2026-08-08.
 
 ### PHASE 3 · PRIVACY AND BOTS ⬜  (D3)
 

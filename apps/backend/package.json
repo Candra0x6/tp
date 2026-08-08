@@ -15,6 +15,7 @@
     "@nestjs/common": "^11.1.28",
     "@nestjs/core": "^11.1.28",
     "@nestjs/platform-express": "^11.1.28",
+    "@solana/spl-token": "^0.4.15",
     "@solana/web3.js": "1.98.4",
     "@trust-fall/chain-client": "workspace:*",
     "@trust-fall/types": "workspace:*",

@@ -141,7 +141,7 @@ pub fn finalize_floor(run: &mut Run, eliminated: u8, resolved: Option<u8>) -> Re
 pub struct Vote<'info> {
     pub player: Signer<'info>,
     #[account(mut, seeds = [b"run", code.as_ref()], bump)]
-    pub run: Account<'info, Run>,
+    pub run: Box<Account<'info, Run>>,
 }
 
 #[derive(Accounts)]
@@ -149,7 +149,7 @@ pub struct Vote<'info> {
 pub struct Mark<'info> {
     pub player: Signer<'info>,
     #[account(mut, seeds = [b"run", code.as_ref()], bump)]
-    pub run: Account<'info, Run>,
+    pub run: Box<Account<'info, Run>>,
 }
 
 #[derive(Accounts)]
@@ -157,12 +157,12 @@ pub struct Mark<'info> {
 pub struct Chat<'info> {
     pub player: Signer<'info>,
     #[account(mut, seeds = [b"run", code.as_ref()], bump)]
-    pub run: Account<'info, Run>,
+    pub run: Box<Account<'info, Run>>,
 }
 
 #[derive(Accounts)]
 #[instruction(code: [u8; 4])]
 pub struct Resolve<'info> {
     #[account(mut, seeds = [b"run", code.as_ref()], bump)]
-    pub run: Account<'info, Run>,
+    pub run: Box<Account<'info, Run>>,
 }

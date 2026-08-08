@@ -110,7 +110,7 @@ pub struct RequestDeal<'info> {
     #[account(mut)]
     pub payer: Signer<'info>,
     #[account(mut, seeds = [b"run", code.as_ref()], bump)]
-    pub run: Account<'info, Run>,
+    pub run: Box<Account<'info, Run>>,
     /// CHECK: the oracle queue. The queue that answers today is not guaranteed
     /// to answer on Sunday, so accept the delegated queues and their bases.
     #[account(
@@ -128,5 +128,5 @@ pub struct RequestDeal<'info> {
 #[instruction(randomness: [u8; 32], code: [u8; 4])]
 pub struct CallbackDeal<'info> {
     #[account(mut, seeds = [b"run", code.as_ref()], bump)]
-    pub run: Account<'info, Run>,
+    pub run: Box<Account<'info, Run>>,
 }

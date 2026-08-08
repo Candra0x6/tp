@@ -17,7 +17,7 @@ use crate::economy::*;
 use crate::floor::*;
 use crate::lobby::*;
 
-declare_id!("68mZDv4kASxdpfXk358QoBK3UdEVJqDzYazeDaF27DAC");
+declare_id!("7JhuY8EbFKruHcUT1dp7DCXmuvu8NkAfuP4NbGdKs2SR");
 
 #[ephemeral]
 #[program]

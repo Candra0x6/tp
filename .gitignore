@@ -39,3 +39,10 @@ Thumbs.db
 *.log
 npm-debug.log*
 pnpm-debug.log*
+
+# local validator ledger + ad-hoc scratch scripts
+contracts/test-ledger/
+apps/backend/_derive-ata.mjs
+/_derive-ata.mjs
+seed-vault.mjs
+apps/backend/scripts/_*.mjs

@@ -225,14 +225,14 @@ pub fn settle<'a>(ctx: Context<'a, Settle<'a>>, code: [u8; 4]) -> Result<()> {
 pub struct BankVote<'info> {
     pub player: Signer<'info>,
     #[account(mut, seeds = [b"run", code.as_ref()], bump)]
-    pub run: Account<'info, Run>,
+    pub run: Box<Account<'info, Run>>,
 }
 
 #[derive(Accounts)]
 #[instruction(code: [u8; 4])]
 pub struct BankResolve<'info> {
     #[account(mut, seeds = [b"run", code.as_ref()], bump)]
-    pub run: Account<'info, Run>,
+    pub run: Box<Account<'info, Run>>,
 }
 
 #[commit]
@@ -242,15 +242,15 @@ pub struct CommitFloor<'info> {
     #[account(mut)]
     pub payer: Signer<'info>,
     #[account(mut, seeds = [b"run", code.as_ref()], bump)]
-    pub run: Account<'info, Run>,
+    pub run: Box<Account<'info, Run>>,
     #[account(mut, seeds = [b"clue", run.key().as_ref(), &[0]], bump)]
-    pub slot0: Account<'info, ClueSlot>,
+    pub slot0: Box<Account<'info, ClueSlot>>,
     #[account(mut, seeds = [b"clue", run.key().as_ref(), &[1]], bump)]
-    pub slot1: Account<'info, ClueSlot>,
+    pub slot1: Box<Account<'info, ClueSlot>>,
     #[account(mut, seeds = [b"clue", run.key().as_ref(), &[2]], bump)]
-    pub slot2: Account<'info, ClueSlot>,
+    pub slot2: Box<Account<'info, ClueSlot>>,
     #[account(mut, seeds = [b"clue", run.key().as_ref(), &[3]], bump)]
-    pub slot3: Account<'info, ClueSlot>,
+    pub slot3: Box<Account<'info, ClueSlot>>,
 }
 
 #[commit]
@@ -260,15 +260,15 @@ pub struct FinalSettle<'info> {
     #[account(mut)]
     pub payer: Signer<'info>,
     #[account(mut, seeds = [b"run", code.as_ref()], bump)]
-    pub run: Account<'info, Run>,
+    pub run: Box<Account<'info, Run>>,
     #[account(mut, seeds = [b"clue", run.key().as_ref(), &[0]], bump)]
-    pub slot0: Account<'info, ClueSlot>,
+    pub slot0: Box<Account<'info, ClueSlot>>,
     #[account(mut, seeds = [b"clue", run.key().as_ref(), &[1]], bump)]
-    pub slot1: Account<'info, ClueSlot>,
+    pub slot1: Box<Account<'info, ClueSlot>>,
     #[account(mut, seeds = [b"clue", run.key().as_ref(), &[2]], bump)]
-    pub slot2: Account<'info, ClueSlot>,
+    pub slot2: Box<Account<'info, ClueSlot>>,
     #[account(mut, seeds = [b"clue", run.key().as_ref(), &[3]], bump)]
-    pub slot3: Account<'info, ClueSlot>,
+    pub slot3: Box<Account<'info, ClueSlot>>,
 }
 
 #[derive(Accounts)]
@@ -282,28 +282,28 @@ pub struct Settle<'info> {
         bump,
         constraint = run.phase == PHASE_DONE
     )]
-    pub run: Account<'info, Run>,
+    pub run: Box<Account<'info, Run>>,
     #[account(
         mut,
-        seeds = [b"escrow", run.key().as_ref()],
+        seeds = [b"escrow", run.code.as_ref()],
         bump,
         constraint = escrow.owner == run.key(),
         constraint = escrow.mint == mint.key()
     )]
-    pub escrow: Account<'info, TokenAccount>,
-    pub mint: Account<'info, Mint>,
+    pub escrow: Box<Account<'info, TokenAccount>>,
+    pub mint: Box<Account<'info, Mint>>,
     #[account(
         mut,
         seeds = [b"vault", mint.key().as_ref()],
         bump,
         constraint = vault.mint == mint.key()
     )]
-    pub vault: Account<'info, Vault>,
+    pub vault: Box<Account<'info, Vault>>,
     #[account(
         mut,
         constraint = vault_ata.owner == vault.key(),
         constraint = vault_ata.mint == mint.key()
     )]
-    pub vault_ata: Account<'info, TokenAccount>,
+    pub vault_ata: Box<Account<'info, TokenAccount>>,
     pub token_program: Program<'info, Token>,
 }

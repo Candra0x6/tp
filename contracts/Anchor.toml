@@ -5,10 +5,10 @@ resolution = true
 skip-lint = false
 
 [programs.devnet]
-trust_fall = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS"
+trust_fall = "7JhuY8EbFKruHcUT1dp7DCXmuvu8NkAfuP4NbGdKs2SR"
 
 [programs.localnet]
-trust_fall = "68mZDv4kASxdpfXk358QoBK3UdEVJqDzYazeDaF27DAC"
+trust_fall = "7JhuY8EbFKruHcUT1dp7DCXmuvu8NkAfuP4NbGdKs2SR"
 
 [provider]
 cluster = "localnet"

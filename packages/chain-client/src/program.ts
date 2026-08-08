@@ -55,8 +55,8 @@ export function clueSlotKey(run: PublicKey, seat: number): PublicKey {
   )[0]
 }
 
-export function escrowKey(run: PublicKey): PublicKey {
-  return PublicKey.findProgramAddressSync([ESCROW_SEED, run.toBuffer()], PROGRAM_ID)[0]
+export function escrowKey(code: number[]): PublicKey {
+  return PublicKey.findProgramAddressSync([ESCROW_SEED, Uint8Array.from(code)], PROGRAM_ID)[0]
 }
 
 export function vaultKey(mint: PublicKey): PublicKey {
@@ -263,7 +263,7 @@ export class TrustFallProgram {
       .accountsStrict({
         host,
         run,
-        escrow: escrowKey(run),
+        escrow: escrowKey(c),
         hostAta: playerAtaKey(host, this.mint),
         mint: this.mint,
         tokenProgram: TOKEN_PROGRAM_ID,
@@ -272,13 +272,18 @@ export class TrustFallProgram {
       .rpc()
   }
 
-  async joinParty(player: PublicKey, run: PublicKey): Promise<TransactionSignature> {
+  async joinParty(
+    player: PublicKey,
+    run: PublicKey,
+    code: string | number[] | Uint8Array,
+  ): Promise<TransactionSignature> {
+    const c = normalizeCode(code)
     return this.base()
       .methods.joinParty()
       .accountsStrict({
         player,
         run,
-        escrow: escrowKey(run),
+        escrow: escrowKey(c),
         playerAta: playerAtaKey(player, this.mint),
         mint: this.mint,
         tokenProgram: TOKEN_PROGRAM_ID,
@@ -472,7 +477,7 @@ export class TrustFallProgram {
       .accountsStrict({
         payer,
         run,
-        escrow: escrowKey(run),
+        escrow: escrowKey(c),
         mint: this.mint,
         vault,
         vaultAta: vaultAtaKey(vault, this.mint),

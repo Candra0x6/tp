@@ -131,7 +131,7 @@ base.
 Run        ["run",    code]
 ClueSlot   ["clue",   run_pubkey, seat]
 Vault      ["vault",  mint]
-Escrow     ["escrow", run_pubkey]
+Escrow     ["escrow", code]
 ```
 
 Seeds must match exactly between the `delegate` call and the account definition.

@@ -84,7 +84,7 @@ export class BotsService {
       const seat = taken + i
       const program = this.programFor(code, seat)
       await this.fundIfNeeded(program.publicKey)
-      await program.joinParty(program.publicKey, runKey(normalizeCode(code)))
+      await program.joinParty(program.publicKey, runKey(normalizeCode(code)), normalizeCode(code))
       await program.ready(program.publicKey, runKey(normalizeCode(code)))
       created.push({ code, seat, pubkey: program.publicKey.toBase58(), isCpu: true })
     }
