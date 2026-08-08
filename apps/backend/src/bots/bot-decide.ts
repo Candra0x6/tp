@@ -72,6 +72,10 @@ export function bankChoice(run: Pick<RunAccount, 'floor' | 'depth'>): 'climb' | 
 /**
  * The chat sentence for a clue mask, plain text, ALL CAPS, restricted to the
  * program's charset (GAME-LOGIC.md section 4). "DOORS 2 AND 4 ARE COLD".
+ * Every real deal stays under CHAT_BODY (28) because a clue never carries
+ * more than ceil(doors/2) doors, so the fixed grammar above always fits.
+ * The compact "COLD a b ..." form is a guard only: if the victory strip ever
+ * widens doors, a message that would overflow is shortened, not dropped.
  */
 export function clueSentence(mask: number, doors: number): string {
   const cold: number[] = []
@@ -79,7 +83,10 @@ export function clueSentence(mask: number, doors: number): string {
     if ((mask >> d) & 1) cold.push(d + 1)
   }
   if (cold.length === 0) return ''
-  if (cold.length === 1) return `DOOR ${cold[0]} IS COLD`
-  const lead = cold.slice(0, -1).join(', ')
-  return `DOORS ${lead} AND ${cold[cold.length - 1]} ARE COLD`
+  const long =
+    cold.length === 1
+      ? `DOOR ${cold[0]} IS COLD`
+      : `DOORS ${cold.slice(0, -1).join(', ')} AND ${cold[cold.length - 1]} ARE COLD`
+  if (long.length <= 28) return long
+  return `COLD ${cold.join(' ')}`.slice(0, 28)
 }

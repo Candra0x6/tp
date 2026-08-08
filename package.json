@@ -13,6 +13,8 @@
     "dev:web": "pnpm --filter @trust-fall/web dev",
     "dev:backend": "pnpm --filter @trust-fall/backend dev",
     "build": "turbo build",
+    "test": "pnpm -r --filter './apps/*' --filter './packages/*' test",
+    "test:backend": "pnpm --filter @trust-fall/backend test",
     "lint": "turbo lint",
     "clean": "turbo clean"
   },

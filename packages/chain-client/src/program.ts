@@ -478,13 +478,12 @@ export class TrustFallProgram {
         vaultAta: vaultAtaKey(vault, this.mint),
         tokenProgram: TOKEN_PROGRAM_ID,
       })
-    for (const p of players) {
-      builder.remainingAccounts([{
-        pubkey: playerAtaKey(p, this.mint),
-        isWritable: true,
-        isSigner: false,
-      }])
-    }
+    const metas = players.map((p) => ({
+      pubkey: playerAtaKey(p, this.mint),
+      isWritable: true,
+      isSigner: false,
+    }))
+    if (metas.length > 0) builder.remainingAccounts(metas)
     return builder.rpc()
   }
 }
