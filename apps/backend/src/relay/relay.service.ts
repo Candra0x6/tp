@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
-import { PublicKey } from '@solana/web3.js';
+import { Keypair, PublicKey } from '@solana/web3.js';
 import {
   normalizeCode,
   runKey,
@@ -9,12 +9,14 @@ import {
   type ClueSlotAccount,
 } from '@trust-fall/chain-client';
 import { config } from '../config';
-import { botOf, botWallet } from '../bots/bot-wallet';
+import { botWallet } from '../bots/bot-wallet';
 
 /**
  * The relay: a read-only view of a run for clients that want the board without
  * opening their own RPC subscription. It is never authoritative; the chain is.
- * The probe wallet is ephemeral and only exists to build the client instance.
+ * The probe wallet is ephemeral (throwaway keypair) and only exists to build a
+ * client instance; the relay never signs anything, so it must not depend on
+ * the bot seed.
  */
 @Injectable()
 export class RelayService {
@@ -31,11 +33,10 @@ export class RelayService {
     timestamp: number
   }> {
     const run = runKey(normalizeCode(code))
-    if (!config.botSeed) throw new BadRequestException('UNSET_SEED')
     const status = await getDelegationStatus(run)
     const probe = new TrustFallProgram(
       config.mint ? new PublicKey(config.mint) : PublicKey.default,
-      botWallet(botOf(config.botSeed, code, 0)),
+      botWallet(Keypair.generate()),
     )
 
     let runAcct: RunAccount | null = null
