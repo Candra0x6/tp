@@ -3,7 +3,10 @@ import { Keypair, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { homedir } from 'node:os';
-import { getOrCreateAssociatedTokenAccount, mintTo } from '@solana/spl-token';
+import {
+  createAssociatedTokenAccountIdempotentInstruction,
+  createMintToInstruction,
+} from '@solana/spl-token';
 import {
   normalizeCode,
   runKey,
@@ -88,7 +91,7 @@ export class BotsService {
     for (let i = 0; i < count; i++) {
       const seat = taken + i
       const program = this.programFor(code, seat)
-      await this.fundIfNeeded(program.publicKey)
+      await this.fundBotSeat(program.publicKey)
       await program.joinParty(program.publicKey, runKey(normalizeCode(code)), normalizeCode(code))
       await program.ready(program.publicKey, runKey(normalizeCode(code)))
       created.push({ code, seat, pubkey: program.publicKey.toBase58(), isCpu: true })
@@ -101,31 +104,71 @@ export class BotsService {
     return Keypair.fromSecretKey(Uint8Array.from(JSON.parse(readFileSync(path, 'utf8'))));
   }
 
-  async fundUsdc(pubkeyStr: string): Promise<{ pubkey: string; ata: string }> {
-    const pubkey = new PublicKey(pubkeyStr);
+  private async fundBotSeat(pubkey: PublicKey): Promise<void> {
     const mint = this.mint();
     const base = baseConnection();
     const host = this.loadHost();
 
     const ata = playerAtaKey(pubkey, mint);
-    await getOrCreateAssociatedTokenAccount(base, host, mint, pubkey, false);
+    const ataInfo = await base.getAccountInfo(ata).catch(() => null);
+    const lamports = await base.getBalance(pubkey).catch(() => 0);
+
+    const { SystemProgram, Transaction } = await import('@solana/web3.js');
+
+    // Step 1: Fund SOL gas & Create ATA if missing
+    const tx1 = new Transaction();
+    if (lamports < 15_000_000) {
+      tx1.add(
+        SystemProgram.transfer({
+          fromPubkey: host.publicKey,
+          toPubkey: pubkey,
+          lamports: 15_000_000, // 0.015 SOL covers 938-byte Run account rent-exempt 0.0074 SOL + tx fees
+        })
+      );
+    }
+    if (!ataInfo) {
+      tx1.add(
+        createAssociatedTokenAccountIdempotentInstruction(
+          host.publicKey,
+          ata,
+          pubkey,
+          mint
+        )
+      );
+    }
+    if (tx1.instructions.length > 0) {
+      try {
+        const sig1 = await base.sendTransaction(tx1, [host]);
+        await base.confirmTransaction(sig1, 'confirmed');
+        await sleep(1000);
+      } catch (err) {
+        this.logger.warn(`fundBotSeat tx1 ${pubkey.toBase58()} warning: ${err}`);
+      }
+    }
+
+    // Step 2: Mint 2 USDC to ATA if balance < 2 USDC
     const bal = await base.getTokenAccountBalance(ata).catch(() => null);
     const held = bal ? BigInt(bal.value.amount) : 0n;
     if (held < 2_000_000n) {
-      await mintTo(base, host, mint, ata, host, 2_000_000n);
+      try {
+        const tx2 = new Transaction().add(
+          createMintToInstruction(mint, ata, host.publicKey, 2_000_000n)
+        );
+        const sig2 = await base.sendTransaction(tx2, [host]);
+        await base.confirmTransaction(sig2, 'confirmed');
+        await sleep(1000);
+      } catch (err) {
+        this.logger.warn(`fundBotSeat tx2 ${pubkey.toBase58()} warning: ${err}`);
+      }
     }
-    return { pubkey: pubkeyStr, ata: ata.toBase58() };
   }
 
-  private async fundIfNeeded(pubkey: PublicKey): Promise<void> {
-    if (!config.devnetAirdrop) return
-    const base = baseConnection()
-    const lamports = await base.getBalance(pubkey).catch(() => 0)
-    if (lamports < LAMPORTS_PER_SOL) {
-      await base.requestAirdrop(pubkey, LAMPORTS_PER_SOL).catch((err) => {
-        this.logger.warn(`airdrop ${pubkey.toBase58()}: ${err instanceof Error ? err.message : err}`)
-      })
-    }
+  async fundUsdc(pubkeyStr: string): Promise<{ pubkey: string; ata: string }> {
+    const pubkey = new PublicKey(pubkeyStr);
+    await this.fundBotSeat(pubkey);
+    const mint = this.mint();
+    const ata = playerAtaKey(pubkey, mint);
+    return { pubkey: pubkeyStr, ata: ata.toBase58() };
   }
 
   /** Toggle a bot's participation so its fills join the loop. */

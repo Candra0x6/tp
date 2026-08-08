@@ -43,6 +43,14 @@ export function getOrCreateEphemeralWallet(): { keypair: Keypair; wallet: Anchor
   return { keypair: kp, wallet: createWalletAdapter(kp) };
 }
 
+export function createFreshEphemeralWallet(): { keypair: Keypair; wallet: AnchorWallet } {
+  const kp = Keypair.generate();
+  if (typeof window !== 'undefined') {
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(Array.from(kp.secretKey)));
+  }
+  return { keypair: kp, wallet: createWalletAdapter(kp) };
+}
+
 export async function ensureWalletFunded(connection: Connection, pubkey: PublicKey): Promise<void> {
   try {
     const balance = await connection.getBalance(pubkey);
