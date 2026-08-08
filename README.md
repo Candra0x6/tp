@@ -14,6 +14,7 @@ Blind, a party clears the tower once in 2,400 runs. Talking to each other, every
 
 ## Live Deployment & Verified On-Chain State
 
+- **Live Web App**: `https://trust-fall-8427m5a93-candras-projects.vercel.app`
 - **Deployed Program ID**: `7JhuY8EbFKruHcUT1dp7DCXmuvu8NkAfuP4NbGdKs2SR`
 - **Base Network**: Solana Devnet (`https://api.devnet.solana.com`)
 - **Ephemeral Rollup**: MagicBlock Devnet (`devnet-eu.magicblock.app`)
