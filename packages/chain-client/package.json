@@ -9,7 +9,11 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@trust-fall/types": "workspace:*"
+    "@coral-xyz/anchor": "0.32.1",
+    "@magicblock-labs/ephemeral-rollups-sdk": "0.16.2",
+    "@solana/web3.js": "1.98.4",
+    "@trust-fall/types": "workspace:*",
+    "zustand": "5.0.14"
   },
   "devDependencies": {
     "typescript": "^5.9.3"

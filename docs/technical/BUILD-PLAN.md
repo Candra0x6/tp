@@ -100,9 +100,9 @@ The only goal tonight is to remove tomorrow's unknowns.
 | 1.7 | `floor.rs`: vote, mark, chat with charset validation, resolve | A | ✅ |
 | 1.8 | `floor.rs`: `resolve_expired` against `Clock::unix_timestamp` | A | ✅ |
 | 1.9 | `economy.rs`: multipliers, vault clamp, equal split | A | ✅ |
-| 1.10 | Anchor client wrappers in `chain/program.ts` | B | ⬜ |
-| 1.11 | `chain/connection.ts`: router `getDelegationStatus`, never a hardcoded fqdn | B | ⬜ |
-| 1.12 | `chain/subscribe.ts`: `onAccountChange` into the Zustand store | B | ⬜ |
+| 1.10 | Anchor client wrappers in `chain/program.ts` | B | ✅ |
+| 1.11 | `chain/connection.ts`: router `getDelegationStatus`, never a hardcoded fqdn | B | ✅ |
+| 1.12 | `chain/subscribe.ts`: `onAccountChange` into the Zustand store | B | ✅ |
 | 1.13 | S0, S1, S2, S3 on fixtures | C | ⬜ |
 
 > **GATE G1.** `cargo test` green, and `clue_necessary` in particular. That test

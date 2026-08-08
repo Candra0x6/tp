@@ -6,10 +6,12 @@ packages:
 allowBuilds:
   '@google/genai': true
   '@tailwindcss/oxide': true
+  bufferutil: false
   protobufjs: true
   re2: true
   sharp: true
   unrs-resolver: true
+  utf-8-validate: false
 
 onlyBuiltDependencies:
   - '@google/genai'
