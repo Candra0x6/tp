@@ -84,16 +84,26 @@ pub fn callback_deal(
         if i >= p as usize {
             break;
         }
-        let (expected, _) =
+        let (expected, bump) =
             Pubkey::find_program_address(&[b"clue", run_key.as_ref(), &[i as u8]], &crate::ID);
         require_keys_eq!(slot_info.key(), expected, ErrorCode::BadPda);
-        let mut slot: Account<ClueSlot> = Account::try_from(slot_info)?;
-        slot.run = run_key;
-        slot.seat = i as u8;
-        slot.floor = run.floor;
-        slot.mask = clues[i];
-        slot.dealt = true;
-        slot.exit(&crate::ID)?;
+        // The slots arrive raw from the delegate instruction, which creates
+        // them as UncheckedAccount (no discriminator written). Write the
+        // discriminator plus serialized data here, where the full struct
+        // (player included) is known for the first time.
+        let slot = ClueSlot {
+            bump,
+            run: run_key,
+            player: run.players[i],
+            seat: i as u8,
+            floor: run.floor,
+            mask: clues[i],
+            dealt: true,
+        };
+        let mut data = slot_info.try_borrow_mut_data()?;
+        data[..8].copy_from_slice(ClueSlot::DISCRIMINATOR);
+        let mut w: &mut [u8] = &mut data[8..];
+        slot.serialize(&mut w)?;
     }
 
     run.vrf_state = VRF_DEALT;

@@ -1,5 +1,5 @@
 import { AnchorProvider, BN, IdlAccounts, Program, Wallet } from '@coral-xyz/anchor'
-import { Connection, PublicKey, SystemProgram, SYSVAR_SLOT_HASHES_PUBKEY } from '@solana/web3.js'
+import { ComputeBudgetProgram, Connection, PublicKey, SystemProgram, SYSVAR_SLOT_HASHES_PUBKEY } from '@solana/web3.js'
 import type { TransactionSignature } from '@solana/web3.js'
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -307,7 +307,8 @@ export class TrustFallProgram {
     const bufferOf = (acc: PublicKey) =>
       delegateBufferPdaFromDelegatedAccountAndOwnerProgram(acc, PROGRAM_ID)
     const slots = slotKeys(run)
-    return this.base()
+    const program = this.base()
+    const tx = await program
       .methods.delegate(c, validator)
       .accountsStrict({
         host,
@@ -335,7 +336,10 @@ export class TrustFallProgram {
         delegationProgram: DELEGATION_PROGRAM_ID,
         systemProgram: SYSTEM_PROGRAM_ID,
       })
-      .rpc()
+      .transaction()
+    tx.instructions.unshift(ComputeBudgetProgram.setComputeUnitLimit({ units: 1_000_000 }))
+    const provider = program.provider as AnchorProvider
+    return provider.sendAndConfirm(tx, [], { skipPreflight: false })
   }
 
   /* ---------------- Ephemeral rollup calls ---------------- */

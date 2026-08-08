@@ -90,10 +90,10 @@ async function fundSeat(seat) {
 
 async function pollRun() {
   try {
-    return await tf.fetchRunBase(CODE)
+    return await tf.fetchRunEr(CODE)
   } catch {
     try {
-      return await tf.fetchRunEr(CODE)
+      return await tf.fetchRunBase(CODE)
     } catch {
       return null
     }
@@ -125,7 +125,10 @@ async function run() {
   await tf.ready(HOST.publicKey, runKey(normalizeCode(CODE)))
   console.log('[live-run] host ready')
 
-  await tf.delegate(HOST.publicKey, CODE, null)
+  const validator = process.env.TF_VALIDATOR
+    ? new PublicKey(process.env.TF_VALIDATOR)
+    : null
+  await tf.delegate(HOST.publicKey, CODE, validator)
   console.log('[live-run] delegate sent, waiting for router…')
   const delegated = await waitDelegated()
   console.log(`[live-run] delegated fqdn=${delegated.fqdn}`)
@@ -182,7 +185,16 @@ async function finalize(run) {
   await tf.finalSettle(HOST.publicKey, CODE)
   console.log('[live-run] final settle committed')
 
-  const players = run.players.slice(0, run.player_count).map((p) => new PublicKey(p))
+  console.log('[live-run] waiting for undelegate…')
+  const undelegateTimeout = Date.now() + 60_000
+  while (Date.now() < undelegateTimeout) {
+    const s = await getDelegationStatus(runKey(normalizeCode(CODE)))
+    if (!s.isDelegated) break
+    await sleep(2000)
+  }
+  console.log('[live-run] run back on base')
+
+  const players = run.players.slice(0, run.playerCount ?? run.player_count).map((p) => new PublicKey(p))
   await tf.settle(HOST.publicKey, CODE, players)
   console.log('[live-run] payout settle sent')
 
@@ -198,8 +210,8 @@ async function reconcile() {
   const num = (v, d = '?') => (v == null ? d : Number(v) / 1e6)
   const bal = num(vault?.balance)
   const seeded = num(vault?.seeded)
-  const falls = num(vault?.total_falls)
-  const pays = num(vault?.total_payouts)
+  const falls = num(vault?.totalFalls ?? vault?.total_falls)
+  const pays = num(vault?.totalPayouts ?? vault?.total_payouts)
   const ataBal = num(ata?.value?.amount)
   const ok = seeded !== '?' && bal !== '?'
   console.log(`[live-run] vault ledger balance=${bal} seeded=${seeded} falls=${falls} payouts=${pays} ata=${ataBal}`)
@@ -207,4 +219,4 @@ async function reconcile() {
   if (ok && seeded + falls - pays !== bal) process.exitCode = 4
 }
 
-run().catch((err) => die(2, err.message))
+run().catch((err) => die(2, err.stack ?? err.message ?? String(err)))

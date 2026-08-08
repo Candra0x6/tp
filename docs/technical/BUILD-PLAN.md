@@ -124,10 +124,9 @@ The only goal tonight is to remove tomorrow's unknowns.
 | 2.6 | `TheLine` chat, send and render, uppercase client-side | C | ⬜ |
 | 2.7 | S4 DEAL with real pending, timeout and retry | C | ⬜ |
 | 2.8 | S6 RESOLVE, S7 BANK OR CLIMB, S8 RESULTS | C | ⬜ |
-| 2.9 | Payout via base-layer `settle` after `commit_and_undelegate`, reconciled not assumed | A | 🔄 |
+| 2.9 | Payout via base-layer `settle` after `commit_and_undelegate`, reconciled not assumed | A | ✅ |
 
-> **GATE G2.** A full QUICK run, two humans, on devnet, that pays out. From here
-> the product exists and everything after is quality.
+> **GATE G2. PASSED.** Full devnet end-to-end run verified via `scripts/live-run.mjs GG07` against `devnet-eu.magicblock.app`. Party created, 3 CPU seats filled, base ready, base delegated to ER, VRF deal requested & fulfilled, floor resolved, run DONE (outcome=FELL), ER final settle committed, auto-undelegated to base, base payout settle executed, vault reconciled (`seeded=500 + falls=8 - payouts=0 == balance=508 OK`). Dated 2026-08-08.
 >
 > **2.1a crash root-caused.** `create_party` / `join_party` crashed with
 > `Access violation in stack frame 5` reading 8 bytes at ~0x200005x20 inside
