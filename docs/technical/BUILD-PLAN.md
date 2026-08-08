@@ -154,7 +154,7 @@ The day the submission gets its claim.
 | 3.3 | `chain/tee.ts`: `verifyTeeRpcIntegrity`, `getAuthToken`, gated reads | B | ⬜ |
 | 3.4 | **Prove denial: a terminal cannot read another seat's ClueSlot** | B | ⬜ |
 | 3.5 | Bots: post clue, mark, vote, panic-vote at 10s | B | 🔄 |
-| 3.6 | QUICK PLAY fills seats and starts with no human input | B | ⬜ |
+| 3.6 | QUICK PLAY fills seats and starts with no human input | B | ✅ |
 | 3.7 | Privacy rung label wired to what actually resolved | C | ⬜ |
 | 3.8 | Every screen checked at 412px on a real phone | C | ⬜ |
 | 3.9 | Failure ladder: every row in `MAGICBLOCK.md` 8 has a visible state | B/C | ⬜ |
