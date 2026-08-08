@@ -1,0 +1,6 @@
+contracts/
+node_modules/
+.git/
+.anchor/
+target/
+.turbo/
