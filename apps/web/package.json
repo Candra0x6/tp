@@ -22,6 +22,7 @@
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
     "tailwind-merge": "^3.3.1",
+    "@solana/spl-token": "^0.4.15",
     "@trust-fall/ui": "workspace:*",
     "@trust-fall/types": "workspace:*",
     "@trust-fall/chain-client": "workspace:*"

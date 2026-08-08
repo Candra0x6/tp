@@ -25,6 +25,17 @@ export async function startQuickPlay(options?: { validator?: string }): Promise<
 
   await ensureWalletFunded(conn, wallet.publicKey);
 
+  // 0. Ensure host ATA exists and holds 2 USDC on devnet via backend faucet
+  try {
+    await fetch('/api/runs/faucet', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ pubkey: wallet.publicKey.toBase58() }),
+    });
+  } catch (err) {
+    console.warn('Backend USDC faucet error:', err);
+  }
+
   const mint = new PublicKey(DEVNET_MINT);
   const tf = new TrustFallProgram(mint, wallet);
   const code = generateRandomCode();

@@ -1,8 +1,13 @@
 import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
 import { Keypair, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { homedir } from 'node:os';
+import { getOrCreateAssociatedTokenAccount, mintTo } from '@solana/spl-token';
 import {
   normalizeCode,
   runKey,
+  playerAtaKey,
   TrustFallProgram,
   baseConnection,
   getDelegationStatus,
@@ -89,6 +94,27 @@ export class BotsService {
       created.push({ code, seat, pubkey: program.publicKey.toBase58(), isCpu: true })
     }
     return created
+  }
+
+  private loadHost(): Keypair {
+    const path = process.env.TF_HOST_KEYPAIR ?? join(homedir(), '.config', 'solana', 'id.json');
+    return Keypair.fromSecretKey(Uint8Array.from(JSON.parse(readFileSync(path, 'utf8'))));
+  }
+
+  async fundUsdc(pubkeyStr: string): Promise<{ pubkey: string; ata: string }> {
+    const pubkey = new PublicKey(pubkeyStr);
+    const mint = this.mint();
+    const base = baseConnection();
+    const host = this.loadHost();
+
+    const ata = playerAtaKey(pubkey, mint);
+    await getOrCreateAssociatedTokenAccount(base, host, mint, pubkey, false);
+    const bal = await base.getTokenAccountBalance(ata).catch(() => null);
+    const held = bal ? BigInt(bal.value.amount) : 0n;
+    if (held < 2_000_000n) {
+      await mintTo(base, host, mint, ata, host, 2_000_000n);
+    }
+    return { pubkey: pubkeyStr, ata: ata.toBase58() };
   }
 
   private async fundIfNeeded(pubkey: PublicKey): Promise<void> {
