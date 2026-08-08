@@ -66,14 +66,14 @@ async function fundSeat(seat) {
   const kp = botOf(SEED, CODE, seat)
   const pub = kp.publicKey
   const lamports = await base.getBalance(pub)
-  if (lamports < LAMPORTS_PER_SOL / 2) {
+  if (lamports < LAMPORTS_PER_SOL / 20) {
     try {
-      await base.requestAirdrop(pub, LAMPORTS_PER_SOL)
+      await base.requestAirdrop(pub, LAMPORTS_PER_SOL / 10)
       await sleep(1500)
     } catch {
       const blockhash = await base.getLatestBlockhash()
       const tx = new Transaction({ feePayer: HOST.publicKey, recentBlockhash: blockhash.blockhash })
-        .add(SystemProgram.transfer({ fromPubkey: HOST.publicKey, toPubkey: pub, lamports: LAMPORTS_PER_SOL / 2 }))
+        .add(SystemProgram.transfer({ fromPubkey: HOST.publicKey, toPubkey: pub, lamports: LAMPORTS_PER_SOL / 20 }))
       await base.sendTransaction(tx, [HOST])
       await sleep(1500)
     }
