@@ -133,6 +133,23 @@ const slotKeys = (run: PublicKey) => ({
   slot3: clueSlotKey(run, 3),
 })
 
+/**
+ * The clue slots a resolution needs to recompute the safe door. The program
+ * reads them from `remaining_accounts`, never from the Run, so the caller must
+ * supply the live slot accounts for every member. Dealt slots are the only
+ * ones that exist, so the list is sized by the run's current player count.
+ */
+export async function slotMetas(
+  program: Program<TrustFall>,
+  run: PublicKey,
+  playerCount: number,
+): Promise<{ pubkey: PublicKey; isWritable: boolean; isSigner: boolean }[]> {
+  return Array.from({ length: playerCount }, (_, seat) => {
+    const key = clueSlotKey(run, seat)
+    return { pubkey: key, isWritable: true, isSigner: false }
+  })
+}
+
 export type AnchorWallet = Wallet
 
 /**
@@ -149,6 +166,11 @@ export class TrustFallProgram {
   constructor(mint: PublicKey, wallet: Wallet) {
     this.mint = mint
     this.wallet = wallet
+  }
+
+  /** The wallet this instance signs with. Bots use this as their own seat. */
+  get publicKey(): PublicKey {
+    return this.wallet.publicKey
   }
 
   private base(): Program<TrustFall> {
@@ -196,6 +218,34 @@ export class TrustFallProgram {
 
   async fetchVault(): Promise<VaultAccount | null> {
     return this.base().account.vault.fetchNullable(vaultKey(this.mint))
+  }
+
+  /**
+   * The lobby copy of a run lives on base before delegation. Returns null when
+   * the account does not exist yet, and throws when its data is not a Run
+   * (e.g. a delegated account owned by the delegation program).
+   */
+  async fetchRunBase(code: string | number[] | Uint8Array): Promise<RunAccount | null> {
+    const run = runKey(normalizeCode(code))
+    return this.base().account.run.fetchNullable(run)
+  }
+
+  /**
+   * The live copy of a run after delegation, resolved from the router fqdn.
+   * Throws NOT_DELEGATED when the router has no fqdn for the run.
+   */
+  async fetchRunEr(code: string | number[] | Uint8Array): Promise<RunAccount | null> {
+    const run = runKey(normalizeCode(code))
+    return (await this.er(run)).account.run.fetchNullable(run)
+  }
+
+  /**
+   * Read a single seat's ClueSlot on the ER. On the public rung every slot is
+   * readable by RPC; on the private rung the caller must hold the permission.
+   * Returns null when the slot has not been dealt for the current floor.
+   */
+  async fetchClueSlot(run: PublicKey, seat: number): Promise<ClueSlotAccount | null> {
+    return (await this.er(run)).account.clueSlot.fetchNullable(clueSlotKey(run, seat))
   }
 
   /* ---------------- Party (base) ---------------- */
@@ -312,7 +362,10 @@ export class TrustFallProgram {
   ): Promise<TransactionSignature> {
     const c = normalizeCode(code)
     const run = runKey(c)
-    return (await this.er(run)).methods.vote(c, door).accountsStrict({ player, run }).rpc()
+    const program = await this.er(run)
+    const account = await program.account.run.fetch(run)
+    const metas = await slotMetas(program, run, account.playerCount)
+    return program.methods.vote(c, door).accountsStrict({ player, run }).remainingAccounts(metas).rpc()
   }
 
   async mark(
@@ -345,7 +398,10 @@ export class TrustFallProgram {
   ): Promise<TransactionSignature> {
     const c = normalizeCode(code)
     const run = runKey(c)
-    return (await this.er(run)).methods.resolve(c).accountsStrict({ run }).rpc()
+    const program = await this.er(run)
+    const account = await program.account.run.fetch(run)
+    const metas = await slotMetas(program, run, account.playerCount)
+    return program.methods.resolve(c).accountsStrict({ run }).remainingAccounts(metas).rpc()
   }
 
   async resolveExpired(
@@ -353,7 +409,10 @@ export class TrustFallProgram {
   ): Promise<TransactionSignature> {
     const c = normalizeCode(code)
     const run = runKey(c)
-    return (await this.er(run)).methods.resolveExpired(c).accountsStrict({ run }).rpc()
+    const program = await this.er(run)
+    const account = await program.account.run.fetch(run)
+    const metas = await slotMetas(program, run, account.playerCount)
+    return program.methods.resolveExpired(c).accountsStrict({ run }).remainingAccounts(metas).rpc()
   }
 
   async bankVote(

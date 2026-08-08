@@ -50,7 +50,7 @@ Goal 2 is the submission. Everything else is support.
 | Lane | Owner | Owns | Never touches |
 | --- | --- | --- | --- |
 | **A** | contract dev | `program/**` | `app/**` |
-| **B** | dev | `app/src/chain/**`, `game/store.ts`, `game/bots.ts` | `game/screens/**`, `styles/**` |
+| **B** | dev | `app/src/chain/**`, `game/store.ts`, `game/bots.ts`, `apps/backend/**` | `game/screens/**`, `styles/**` |
 | **C** | product | `game/screens/**`, `console/**`, `ui/**`, `styles/**`, `config/**` | `chain/**`, `program/**` |
 
 **The rule that keeps three lanes from colliding.** Lane A owns the IDL. Lane B
@@ -138,7 +138,7 @@ The day the submission gets its claim.
 | 3.2 | `CreateEphemeralPermissionCpi`, single member per slot | A | ⬜ |
 | 3.3 | `chain/tee.ts`: `verifyTeeRpcIntegrity`, `getAuthToken`, gated reads | B | ⬜ |
 | 3.4 | **Prove denial: a terminal cannot read another seat's ClueSlot** | B | ⬜ |
-| 3.5 | Bots: post clue, mark, vote, panic-vote at 10s | B | ⬜ |
+| 3.5 | Bots: post clue, mark, vote, panic-vote at 10s | B | 🔄 |
 | 3.6 | QUICK PLAY fills seats and starts with no human input | B | ⬜ |
 | 3.7 | Privacy rung label wired to what actually resolved | C | ⬜ |
 | 3.8 | Every screen checked at 412px on a real phone | C | ⬜ |
@@ -147,6 +147,14 @@ The day the submission gets its claim.
 > **GATE G3.** Task 3.4 passes. This is the submission. If it does not pass by
 > Saturday 20:00, **fall back to rung 1 and change the on-screen label**, do not
 > keep pushing. An honest public-ER build ships. A broken private one does not.
+
+**Bots live in a NestJS backend, not web workers.** Decided 2026-08-08 with the
+console. Bots are seeded per-run serverside (`TF_BOT_SEED`), join and ready from
+the backend after the host creates the party, then act per floor like any client
+(honest, labelled `CPU`). A read-only `/api/runs/:code` relay gives the web app a
+board view without loading the anchor SDK. The backend never owns game state,
+never resolves, and can be replaced by a locally run process without touching the
+game. See `docs/technical/ARCHITECTURE.md` §1.
 
 ### PHASE 4 · FREEZE AND SUBMIT ⬜  (D4)
 

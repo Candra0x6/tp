@@ -17,7 +17,17 @@
     "clean": "turbo clean"
   },
   "devDependencies": {
+    "@nestjs/cli": "^11.0.24",
     "turbo": "^2.4.0",
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@coral-xyz/anchor": "0.32.1",
+    "@nestjs/common": "^11.1.28",
+    "@nestjs/core": "^11.1.28",
+    "@nestjs/platform-express": "^11.1.28",
+    "@solana/web3.js": "1.98.4",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2"
   }
 }

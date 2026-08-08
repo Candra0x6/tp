@@ -5,10 +5,16 @@ the first commit of the day so three people do not edit the same file.
 
 ---
 
-## 1. There is no backend
+## 1. There is no game server, only bots
 
-Worth stating first because it is the strongest technical claim in the
-submission, and because it changes how everything else is laid out.
+The gameplay loop is fully on-chain: a browser talks to the ephemeral rollup over
+a plain Solana account subscription, and Solana settles to devnet. Realtime is
+`connection.onAccountChange(runPda, cb)` against the ER websocket. No Socket.io,
+no Colyseus, no authoritative game host, no Supabase realtime, no serverless
+functions.
+
+What there is, is **one NestJS backend that only hosts the CPU players and the
+relay**:
 
 ```
 browser  ──ws──▶  ephemeral rollup   (10ms shared state, all gameplay)
@@ -16,18 +22,21 @@ browser  ──ws──▶  ephemeral rollup   (10ms shared state, all gameplay)
    │                    ├── commit ──▶  Solana devnet  (settlement, escrow, vault)
    │                    └── VRF oracle
    │
-   └── CPU players run here too, in web workers
+   └── HTTP ──▶  backend  ──ws──▶  same rollup   (CPU bots, read-only relay)
 ```
 
-Realtime is `connection.onAccountChange(runPda, cb)` against the ER websocket,
-which is a plain Solana account subscription. No Socket.io, no Colyseus, no game
-server, no Supabase realtime, no serverless functions. The deploy is static files
-on Vercel plus one program on devnet.
+The backend never owns game state and never decides outcomes. It signs bot
+transactions like any other client, and it answers read-only relay queries
+(`GET /api/runs/:code`) so the web app does not need the anchor SDK loaded to
+render a board. **The client is never authoritative**, so a modified client can
+lie about what it renders and cannot lie about what happened. The bots are
+clients too; the one thing they need hosting for is keeping deterministic seeded
+keypairs running during a demo so a judge never assembles a party alone.
 
-Two consequences that are easy to miss. **The client is never authoritative**, so
-a modified client can lie about what it renders and cannot lie about what
-happened. And **the bots are just clients**, so they need no hosting and cannot be
-a Sunday outage.
+Two consequences that are easy to miss. A hostile or overloaded backend cannot
+corrupt a run, only stop serving bots, and a run already in flight keeps going
+without it. And the backend is replacable: point the web app at devnet plus a
+locally-run bot process and the same game works.
 
 ## 2. Layout
 
@@ -38,10 +47,11 @@ trust-fall/
 │   │   ├── app/                   Screens, pages, routing
 │   │   ├── components/            Web-specific UI components
 │   │   └── hooks/                 Custom hooks & game loop
-│   └── backend/                   Backend Service / Indexer / Bot Engine
-│       ├── src/api/               API routes & handlers
-│       ├── src/services/          CPU bot runners & chain event indexing
-│       └── src/routes/            REST / WebSocket endpoints
+│   └── backend/                   NestJS Bots + Relay engine
+│       ├── src/main.ts            Bootstrap, global /api prefix, CORS, port
+│       ├── src/config.ts          TF_* env: mint, bot seed, devnet airdrop
+│       ├── src/bots/              CPU bot runners, seeded per-run wallets
+│       └── src/relay/             Read-only run state over HTTP for the web app
 │
 ├── contracts/                     Anchor Smart Contracts Workspace
 │   ├── programs/trust-fall/src/   Rust program instructions & state
@@ -94,9 +104,18 @@ stack's history and it will happen again.
       └──▶ bots.ts    reconsider, maybe vote
 ```
 
-Every client in the party runs that same path off the same push. Nobody is
-authoritative, nobody polls, and there is no reconciliation step because there is
-only one copy of the state.
+Every client in the party runs that same path off the same push, including the
+backend's bots, which are ordinary clients with seeded keypairs. Nobody is
+authoritative, nobody polls on the gameplay path, and there is no reconciliation
+step because there is only one copy of the state.
+
+The backend relay path is separate and read-only:
+
+```
+ web app  ──HTTP──▶  backend  GET /api/runs/:code
+                        │
+                        └── router getDelegationStatus + fetchRun → run JSON
+```
 
 The private half never takes that path. `ClueSlot` is read once per floor,
 through the TEE endpoint with an auth token, straight into the store, and it is

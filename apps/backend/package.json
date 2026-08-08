@@ -2,18 +2,26 @@
   "name": "@trust-fall/backend",
   "version": "0.1.0",
   "private": true,
-  "main": "./src/index.ts",
+  "main": "./dist/main.js",
   "scripts": {
-    "dev": "tsc --watch & node dist/index.js",
+    "dev": "tsc --watch & node dist/main.js",
     "build": "tsc",
-    "start": "node dist/index.js",
+    "start": "node dist/main.js",
     "lint": "eslint ."
   },
   "dependencies": {
+    "@coral-xyz/anchor": "0.32.1",
+    "@nestjs/common": "^11.1.28",
+    "@nestjs/core": "^11.1.28",
+    "@nestjs/platform-express": "^11.1.28",
+    "@solana/web3.js": "1.98.4",
     "@trust-fall/chain-client": "workspace:*",
-    "@trust-fall/types": "workspace:*"
+    "@trust-fall/types": "workspace:*",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2"
   },
   "devDependencies": {
+    "@nestjs/cli": "^11.0.24",
     "@types/node": "^20.0.0",
     "typescript": "^5.9.3"
   }

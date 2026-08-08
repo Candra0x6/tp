@@ -2,8 +2,9 @@
 
 The TypeScript side: dual connections, the subscription model, the bot engine,
 and mapping every async boundary to a visible state. This is Lane B's
-starting point. "There is no backend" is the claim; these are the files that
-make it true.
+starting point. The original claim was "There is no backend"; the current
+decision is a backend that hosts bots and a relay but no game state. See
+`docs/technical/ARCHITECTURE.md` §1 for the current word.
 
 ## 1. The shape of the client
 
@@ -89,17 +90,29 @@ broadcast.
 
 ## 4. The bots
 
-Bots are clients. They run in a web worker in the judge's own browser, so the
-deploy stays static and there is no bot server to fall over. They are
-cooperative teammates that play honestly, labelled `CPU`, never presented as
-people.
+Bots are clients. They run as a NestJS backend process (`apps/backend`), one
+truth: a judge opens the link alone and must be inside a live clue in 20
+seconds, so the party cannot wait for three humans and the browser must not
+own the bot loop. Bots are cooperative teammates that play honestly, labelled
+`CPU`, never presented as people.
+
+The backend is small on purpose and deliberate about its limits:
+
+- It never owns or resolves game state; it signs the same instructions a human
+  client signs, from deterministic seeded keypairs.
+- It exposes two HTTP surfaces: `POST /api/runs/:code/bots/fill` (join + ready
+  once the host created the party) and `GET /api/runs/:code` (read-only board
+  relay so the web app can render a run without the anchor SDK or the wallet).
+- It can be replaced by a local process without touching the game.
 
 ```typescript
-// app/src/game/bots.ts, in a web worker
-onmessage = (e) => {
-  const state = e.data; // the same decoded Run the store holds
-  // behaviour from docs/technical/GAME-LOGIC.md section 7
-};
+// apps/backend/src/bots/bots.service.ts
+for (const seat of seats) {
+  await program.joinParty(...);   // seeded keypair, like any client
+  await program.ready();          // like any client
+}
+// then spin: on floor start, post clue + mark; when board resolves, vote;
+// at 10s remaining, panic-vote; at bank, climb unless final floor
 ```
 
 The four rules:
