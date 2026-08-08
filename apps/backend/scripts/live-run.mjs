@@ -66,20 +66,20 @@ async function fundSeat(seat) {
   const kp = botOf(SEED, CODE, seat)
   const pub = kp.publicKey
   const lamports = await base.getBalance(pub)
-  if (lamports < LAMPORTS_PER_SOL / 20) {
+  if (lamports < 5_000_000) {
     try {
-      await base.requestAirdrop(pub, LAMPORTS_PER_SOL / 10)
+      await base.requestAirdrop(pub, 10_000_000)
       await sleep(1500)
     } catch {
       const blockhash = await base.getLatestBlockhash()
       const tx = new Transaction({ feePayer: HOST.publicKey, recentBlockhash: blockhash.blockhash })
-        .add(SystemProgram.transfer({ fromPubkey: HOST.publicKey, toPubkey: pub, lamports: LAMPORTS_PER_SOL / 20 }))
+        .add(SystemProgram.transfer({ fromPubkey: HOST.publicKey, toPubkey: pub, lamports: 5_000_000 }))
       await base.sendTransaction(tx, [HOST])
       await sleep(1500)
     }
   }
   const ata = playerAtaKey(pub, MINT)
-  await getOrCreateAssociatedTokenAccount(base, HOST, MINT, pub, false)
+  await getOrCreateAssociatedTokenAccount(base, HOST, MINT, pub, false, 'confirmed')
   const bal = await base.getTokenAccountBalance(ata).catch(() => null)
   const held = bal ? BigInt(bal.value.amount) : 0n
   if (held < STAKE + MARGIN) {
