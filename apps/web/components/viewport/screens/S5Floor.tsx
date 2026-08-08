@@ -33,11 +33,19 @@ export const S5Floor: React.FC<S5FloorProps> = ({
   onSendMessage,
 }) => {
   const [selectedDoor, setSelectedDoor] = useState(1);
+  const [votedDoor, setVotedDoor] = useState<number | null>(null);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [chatInput, setChatInput] = useState('');
 
   const doors = Array.from({ length: doorCount }, (_, i) => i + 1);
   const isWarning = secondsLeft <= 10;
+  const hasVoted = votedDoor !== null;
+
+  const handleVoteClick = (door: number) => {
+    setSelectedDoor(door);
+    setVotedDoor(door);
+    onVote(door);
+  };
 
   const handleChatSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,26 +67,55 @@ export const S5Floor: React.FC<S5FloorProps> = ({
           </span>
         </div>
 
+        {/* Action / Vote Status Guidance Banner */}
+        <div className={`px-2 py-1 rounded text-[9px] font-bold flex items-center justify-between border ${
+          hasVoted
+            ? 'bg-[#00FF94]/10 border-[#00FF94] text-[#00FF94]'
+            : 'bg-[#FF5219]/10 border-[#FF5219] text-[#FF5219]'
+        }`}>
+          <span>
+            {hasVoted
+              ? `✓ VOTE CAST FOR DOOR ${votedDoor} · WAITING FOR TEAM...`
+              : '▸ CHOOSE A DOOR BELOW & CLICK TO VOTE'}
+          </span>
+          {hasVoted && (
+            <span className="animate-pulse text-[8px] bg-[#00FF94] text-[#0f0e13] px-1 rounded font-bold">
+              VOTED
+            </span>
+          )}
+        </div>
+
         {/* Doors Row */}
         <div className="grid grid-flow-col auto-cols-fr gap-1 bg-[#08070b] p-1.5 border border-[#6b6580] rounded">
-          {doors.map((d) => (
-            <button
-              key={d}
-              onClick={() => { setSelectedDoor(d); onVote(d); }}
-              className={`py-2 rounded text-[11px] font-bold border transition-colors ${
-                selectedDoor === d
-                  ? 'bg-[#FF5219] text-[#0f0e13] border-[#FF5219]'
-                  : 'bg-[#1a1922] border-[#6b6580] text-[#f2efe6] hover:bg-[#252330]'
-              }`}
-            >
-              DOOR {d}
-            </button>
-          ))}
+          {doors.map((d) => {
+            const isVoted = votedDoor === d;
+            const isSelected = selectedDoor === d;
+
+            return (
+              <button
+                key={d}
+                onClick={() => handleVoteClick(d)}
+                className={`py-2 rounded text-[11px] font-bold border transition-all flex flex-col items-center justify-center gap-0.5 ${
+                  isVoted
+                    ? 'bg-[#00FF94] text-[#0f0e13] border-[#00FF94] shadow-md scale-98'
+                    : isSelected
+                    ? 'bg-[#FF5219] text-[#0f0e13] border-[#FF5219]'
+                    : 'bg-[#1a1922] border-[#6b6580] text-[#f2efe6] hover:bg-[#252330]'
+                }`}
+              >
+                <span>DOOR {d}</span>
+                {isVoted && <span className="text-[7px] bg-[#0f0e13] text-[#00FF94] px-1 rounded">VOTED</span>}
+              </button>
+            );
+          })}
         </div>
 
         {/* Your Lantern Box */}
         <div className="bg-[#1a1922] border border-[#FF5219] rounded p-1.5 text-[9px]">
-          <div className="text-[#FF5219] font-bold text-[8px] mb-0.5">YOUR LANTERN</div>
+          <div className="text-[#FF5219] font-bold text-[8px] mb-0.5 flex justify-between">
+            <span>YOUR LANTERN (PRIVATE CLUE)</span>
+            <span className="text-[#8b8698]">ONLY YOU SEE THIS</span>
+          </div>
           <div className="text-[#f2efe6] font-bold">{lanternText}</div>
         </div>
 
@@ -108,8 +145,14 @@ export const S5Floor: React.FC<S5FloorProps> = ({
       </div>
 
       <FooterBand
-        left={isChatOpen ? '⏎ SEND' : 'A VOTE  ·  SELECT TALK'}
-        right={isChatOpen ? 'ESC CANCEL' : `DOOR ${selectedDoor}`}
+        left={
+          isChatOpen
+            ? '⏎ SEND'
+            : hasVoted
+            ? `✓ VOTED DOOR ${votedDoor}  ·  SELECT TALK`
+            : 'A VOTE  ·  SELECT TALK'
+        }
+        right={isChatOpen ? 'ESC CANCEL' : hasVoted ? 'WAITING FOR PARTY' : `DOOR ${selectedDoor}`}
       />
     </div>
   );
