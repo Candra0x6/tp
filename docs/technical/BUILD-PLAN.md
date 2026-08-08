@@ -175,9 +175,9 @@ game. See `docs/technical/ARCHITECTURE.md` §1.
 
 | # | Task | Lane | Status |
 | --- | --- | --- | --- |
-| 4.1 | Deploy to Vercel, clean browser profile, phone check | C | ⬜ |
+| 4.1 | Deploy to Vercel, clean browser profile, phone check | C | ✅ |
 | 4.2 | Pre-submission verification, all 6 steps in `MAGICBLOCK.md` 9 | A/B | ✅ |
-| 4.3 | 40 second video, `DEMO-SCRIPT.md` | C | ⬜ |
+| 4.3 | 40 second video, `DEMO-SCRIPT.md` | C | ✅ |
 | 4.4 | README: rung, program ID, verify command, no overclaim | all | ✅ |
 | 4.5 | Repo public, licence, no keys in history | B | ⬜ |
 | 4.6 | Submit by 23:00 | — | ⬜ |
