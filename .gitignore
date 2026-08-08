@@ -13,6 +13,7 @@ build/
 .vercel/
 coverage/
 **/*.so
+*.tsbuildinfo
 
 # SECRETS. Never commit a keypair.
 *.json.key
