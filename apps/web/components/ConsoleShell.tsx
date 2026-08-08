@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useMemo } from 'react';
 import { ConsoleTheme, ScreenFilter, ScreenTint, ControllerInput, GameId, GameMetadata } from '../lib/types';
-import { GameViewport } from './GameViewport';
+import { ScreenManager } from './viewport/ScreenManager';
 import { sound } from '../lib/sound';
 import { Console } from '../../../packages/ui/src/console/Console';
 import { useConsolePressed, useConsoleIntent } from '../../../packages/ui/src/console/useConsoleInput';
@@ -84,12 +84,11 @@ function ConsoleViewportBridge({
   );
 
   return (
-    <GameViewport
-      gameId={currentGameId}
+    <ScreenManager
       input={input}
       screenFilter={screenFilter}
       screenTint={screenTint}
-      onFpsUpdate={setFps}
+      setFps={setFps}
     />
   );
 }
