@@ -119,11 +119,11 @@ The only goal tonight is to remove tomorrow's unknowns.
 | 2.1a | Root-cause `create_party` access violation; local repro passes end-to-end | A | ✅ |
 | 2.2 | Session keys: one signature per run, no popup on vote or chat | B | ⬜ |
 | 2.3 | Two browsers in one party, votes visible in both under 100ms | B | ⬜ |
-| 2.4 | S5 FLOOR on real state: doors, marks, votes, timer | C | ⬜ |
-| 2.5 | `Lantern` component reading a real `ClueSlot` | C | ⬜ |
-| 2.6 | `TheLine` chat, send and render, uppercase client-side | C | ⬜ |
-| 2.7 | S4 DEAL with real pending, timeout and retry | C | ⬜ |
-| 2.8 | S6 RESOLVE, S7 BANK OR CLIMB, S8 RESULTS | C | ⬜ |
+| 2.4 | S5 FLOOR on real state: doors, marks, votes, timer | C | ✅ |
+| 2.5 | `Lantern` component reading a real `ClueSlot` | C | ✅ |
+| 2.6 | `TheLine` chat, send and render, uppercase client-side | C | ✅ |
+| 2.7 | S4 DEAL with real pending, timeout and retry | C | ✅ |
+| 2.8 | S6 RESOLVE, S7 BANK OR CLIMB, S8 RESULTS | C | ✅ |
 | 2.9 | Payout via base-layer `settle` after `commit_and_undelegate`, reconciled not assumed | A | ✅ |
 
 > **GATE G2. PASSED.** Full devnet end-to-end run verified via `scripts/live-run.mjs GG07` against `devnet-eu.magicblock.app`. Party created, 3 CPU seats filled, base ready, base delegated to ER, VRF deal requested & fulfilled, floor resolved, run DONE (outcome=FELL), ER final settle committed, auto-undelegated to base, base payout settle executed, vault reconciled (`seeded=500 + falls=8 - payouts=0 == balance=508 OK`). Dated 2026-08-08.
