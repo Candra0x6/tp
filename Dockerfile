@@ -12,6 +12,7 @@ COPY packages/chain-client/package.json ./packages/chain-client/
 COPY packages/types/package.json ./packages/types/
 COPY packages/ui/package.json ./packages/ui/
 COPY apps/web/package.json ./apps/web/
+COPY contracts/package.json ./contracts/
 
 # Install dependencies
 RUN pnpm install
