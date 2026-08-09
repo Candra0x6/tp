@@ -2,9 +2,11 @@
   "name": "@trust-fall/web",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@10.5.2",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "vercel-build": "next build",
     "start": "next start",
     "lint": "eslint .",
     "clean": "next clean"
