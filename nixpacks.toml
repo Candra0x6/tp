@@ -1,0 +1,11 @@
+[phases.setup]
+nixPkgs = ["nodejs_20", "pnpm-10_x"]
+
+[phases.install]
+cmds = ["pnpm install"]
+
+[phases.build]
+cmds = ["pnpm --filter @trust-fall/types build", "pnpm --filter @trust-fall/chain-client build", "pnpm --filter @trust-fall/backend build"]
+
+[start]
+cmd = "node apps/backend/dist/main.js"
