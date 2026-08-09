@@ -47,3 +47,5 @@ apps/backend/_derive-ata.mjs
 /_derive-ata.mjs
 seed-vault.mjs
 apps/backend/scripts/_*.mjs
+.vercel
+.env*

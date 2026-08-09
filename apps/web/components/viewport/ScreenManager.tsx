@@ -66,8 +66,8 @@ export const ScreenManager: React.FC<ScreenManagerProps> = () => {
       setActiveCode(code);
       setActiveScreen('s4');
     } catch (err: any) {
-      console.error('Quick Play failed:', err);
-      alert(`Quick Play failed: ${err.message}`);
+      console.error('Quick Play failed logs:', err.logs ?? err.transactionLogs ?? err.message ?? err);
+      alert(`Quick Play failed: ${err.message ?? err}`);
     } finally {
       setIsQuickPlayLoading(false);
     }

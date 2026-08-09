@@ -26,6 +26,8 @@ export interface BoardState {
   timestamp: number;
 }
 
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000';
+
 export function useRunObserver(code: string | null, seat: number = 0) {
   const [state, setState] = useState<BoardState | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -40,7 +42,7 @@ export function useRunObserver(code: string | null, seat: number = 0) {
     let active = true;
     const fetchState = async () => {
       try {
-        const res = await fetch(`/api/runs/${code}?seat=${seat}`);
+        const res = await fetch(`${BACKEND_URL}/api/runs/${code}?seat=${seat}`);
         if (!res.ok) {
           if (active) setError(`HTTP ${res.status}`);
           return;
